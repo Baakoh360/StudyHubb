@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyHub - Flashcards</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f7f7f7;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        /* Sidebar */
+        
+        .sidebar {
+            width: 125px;
+            background-color: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding-top: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            color: #888;
+            font-size: 18px;
+        }
+        
+        .sidebar-open {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            background-color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            display: none;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 0 20px 20px;
+        }
+        
+        .logo img {
+            height: 30px;
+        }
+        
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 5px;
+            color: #444;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .menu-item:hover,
+        .menu-item.active {
+            background-color: #f5f5f5;
+        }
+        
+        .menu-item.active {
+            border-left: 3px solid #9c2932;
+        }
+        
+        .menu-text {
+            font-size: 12px;
+            text-align: center;
+            color: #333;
+            margin-top: 5px;
+        }
+        /* Icon colors */
+        
+        .icon-dashboard {
+            color: #3498db;
+        }
+        /* Blue */
+        
+        .icon-upload {
+            color: #2ecc71;
+        }
+        /* Green */
+        
+        .icon-quizzes {
+            color: #f1c40f;
+        }
+        /* Yellow */
+        
+        .icon-library {
+            color: #9b59b6;
+        }
+        /* Purple */
+        
+        .icon-chatbot {
+            color: #e74c3c;
+        }
+        /* Red */
+        
+        .icon-flashcards {
+            color: #1abc9c;
+        }
+        /* Teal */
+        
+        .icon-communities {
+            color: #e67e22;
+        }
+        /* Orange */
+        /* Main Content */
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+        /* Header */
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 20px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+        }
+        
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #9c2932;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 5px;
+            font-size: 14px;
+        }
+        
+        .username {
+            margin-right: 15px;
+            font-size: 14px;
+            color: #444;
+        }
+        
+        .logout-btn {
+            padding: 6px 12px;
+            background-color: transparent;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #444;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .flashcard-options {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            color: black;
+            margin-top: 50px;
+        }
+        
+        .clickable-text {
+            color: #008CBA;
+            /* Blue color */
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .clickable-text:hover {
+            text-decoration: underline;
+            color: #005f7f;
+            /* Darker blue on hover */
+        }
+        /* Footer Toggle */
+        
+        .footer-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            z-index: 90;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            background-color: #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .toggle-switch.active {
+            background-color: #9c2932;
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Sidebar open button -->
+    <div class="sidebar-open">
+        <i class="fas fa-bars" style="font-size: 18px;"></i>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <span class="sidebar-close">×</span>
+            <div class="logo">
+                <img src="3.png" alt="StudyHub Logo">
+            </div>
+
+            <a href="dashboard.html" class="menu-item">
+                <i class="fas fa-th-large icon-dashboard" style="font-size: 22px;"></i>
+                <span class="menu-text">Dashboard</span>
+            </a>
+
+            <a href="upload.html" class="menu-item">
+                <i class="fas fa-upload icon-upload" style="font-size: 22px;"></i>
+                <span class="menu-text">Upload</span>
+            </a>
+
+            <a href="quiz.html" class="menu-item">
+                <i class="fas fa-question-circle icon-quizzes" style="font-size: 22px;"></i>
+                <span class="menu-text">Quizzes</span>
+            </a>
+
+            <a href="library.html" class="menu-item">
+                <i class="fas fa-book icon-library" style="font-size: 22px;"></i>
+                <span class="menu-text">My Library</span>
+            </a>
+
+            <a href="chatbot.html" class="menu-item">
+                <i class="fas fa-comment-dots icon-chatbot" style="font-size: 22px;"></i>
+                <span class="menu-text">AI Chatbot</span>
+            </a>
+
+            <a href="flashcards.html" class="menu-item active">
+                <i class="far fa-clone icon-flashcards" style="font-size: 22px;"></i>
+                <span class="menu-text">Flashcards</span>
+            </a>
+
+            <a href="community.html" class="menu-item">
+                <i class="fas fa-users icon-communities" style="font-size: 22px;"></i>
+                <span class="menu-text">Communities</span>
+            </a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header with Search and User Menu -->
+            <div class="header">
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="Search...">
+                </div>
+
+                <div class="user-menu">
+                    <div class="avatar">M</div>
+                    <span class="username">Mercy D. ▾</span>
+                    <button class="logout-btn">Log out</button>
+                </div>
+            </div>
+            <!-- Flashcards Content -->
+
+            <div class="flashcard-options">
+                <a href="flashcards1.html" class="clickable-text">Explore</a> existing flashcards
+                <br><br> OR
+                <br><br>
+                <a href="upload.html" id="choose-material" class="clickable-text">Choose study material</a> to generate flashcard from
+            </div>
+
+            <!-- Footer Toggle -->
+            <div class="footer-toggle">
+                <div class="toggle-switch"></div>
+            </div>
+
+            <script>
+                // Toggle switch functionality
+                const toggleSwitch = document.querySelector('.toggle-switch');
+                toggleSwitch.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                });
+
+                // Add localStorage parameter to the upload page URL
+                document.getElementById('choose-material').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Store the return destination in localStorage so upload page knows where to return
+                    localStorage.setItem('returnFrom', 'flashcards');
+                    window.location.href = 'upload.html?purpose=flashcards';
+                });
+
+                // Sidebar close functionality with reopen capability
+                const sidebarClose = document.querySelector('.sidebar-close');
+                const sidebarOpen = document.querySelector('.sidebar-open');
+                const sidebar = document.querySelector('.sidebar');
+                const mainContent = document.querySelector('.main-content');
+                const footerToggle = document.querySelector('.footer-toggle');
+
+                // Function to close sidebar
+                function closeSidebar() {
+                    sidebar.style.width = '0';
+                    sidebar.style.padding = '0';
+                    sidebar.style.overflow = 'hidden';
+                    mainContent.style.marginLeft = '0';
+                    sidebarOpen.style.display = 'flex';
+                    // Adjust footer toggle position
+                    footerToggle.style.left = '20px';
+                }
+
+                // Function to open sidebar
+                function openSidebar() {
+                    sidebar.style.width = '125px';
+                    sidebar.style.padding = '20px 0 0 0';
+                    sidebar.style.overflow = 'visible';
+                    sidebarOpen.style.display = 'none';
+                    // Adjust footer toggle position
+                    footerToggle.style.left = '20px';
+                }
+
+                // Close sidebar when X is clicked
+                sidebarClose.addEventListener('click', closeSidebar);
+
+                // Open sidebar when menu button is clicked
+                sidebarOpen.addEventListener('click', openSidebar);
+
+                // Update active class based on current page
+                const menuItems = document.querySelectorAll('.menu-item');
+                const currentPage = window.location.pathname.split('/').pop();
+
+                menuItems.forEach(item => {
+                    const itemPage = item.getAttribute('href');
+                    if (itemPage === currentPage) {
+                        item.classList.add('active');
+                    } else if (currentPage === '' && itemPage === 'dashboard.html') {
+                        // Set dashboard as active on main page
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                });
+
+                // Make logout button functional
+                const logoutBtn = document.querySelector('.logout-btn');
+                logoutBtn.addEventListener('click', function() {
+                    alert('Logout functionality would go here');
+                });
+            </script>
+</body>
+
+</html>

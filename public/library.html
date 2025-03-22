@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyHub - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f7f7f7;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        /* Sidebar */
+        
+        .sidebar {
+            width: 125px;
+            background-color: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding-top: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            color: #888;
+            font-size: 18px;
+        }
+        
+        .sidebar-open {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            background-color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            display: none;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 0 20px 20px;
+        }
+        
+        .logo img {
+            height: 30px;
+        }
+        
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 5px;
+            color: #444;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .menu-item:hover,
+        .menu-item.active {
+            background-color: #f5f5f5;
+        }
+        
+        .menu-item.active {
+            border-left: 3px solid #9c2932;
+        }
+        
+        .menu-text {
+            font-size: 12px;
+            text-align: center;
+            color: #333;
+            margin-top: 5px;
+        }
+        /* Icon colors */
+        
+        .icon-dashboard {
+            color: #3498db;
+        }
+        /* Blue */
+        
+        .icon-upload {
+            color: #2ecc71;
+        }
+        /* Green */
+        
+        .icon-quizzes {
+            color: #f1c40f;
+        }
+        /* Yellow */
+        
+        .icon-library {
+            color: #9b59b6;
+        }
+        /* Purple */
+        
+        .icon-chatbot {
+            color: #e74c3c;
+        }
+        /* Red */
+        
+        .icon-flashcards {
+            color: #1abc9c;
+        }
+        /* Teal */
+        
+        .icon-communities {
+            color: #e67e22;
+        }
+        /* Orange */
+        /* Main Content */
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+        /* Header */
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 20px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+        }
+        
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #9c2932;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 5px;
+            font-size: 14px;
+        }
+        
+        .username {
+            margin-right: 15px;
+            font-size: 14px;
+            color: #444;
+        }
+        
+        .logout-btn {
+            padding: 6px 12px;
+            background-color: transparent;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #444;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background-color: #f5f5f5;
+        }
+        /* Welcome Card */
+        
+        .welcome-card {
+            background-color: #fff2ea;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .welcome-text {
+            color: #666;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+        
+        .user-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .start-button {
+            display: inline-block;
+            color: #9c2932;
+            font-size: 14px;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+        /* Stats Grid */
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background-color: #fff9db;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-title {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        
+        .stat-value {
+            font-size: 40px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .stat-icons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .folder-icon {
+            color: #f1c40f;
+            font-size: 24px;
+            opacity: 0.5;
+        }
+        
+        .fire-icon {
+            color: #e67e22;
+            font-size: 24px;
+            opacity: 0.5;
+        }
+        
+        .doc-icon {
+            color: #3498db;
+            font-size: 24px;
+            opacity: 0.5;
+        }
+        /* Recents Section */
+        
+        .recents-section {
+            margin-top: 30px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .no-recents {
+            color: #888;
+            font-size: 14px;
+            padding: 20px 0;
+        }
+        /* Footer Toggle */
+        
+        .footer-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            z-index: 90;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            background-color: #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .toggle-switch.active {
+            background-color: #9c2932;
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+        }
+        
+        .content {
+            flex-grow: 1;
+            padding: 20px 30px;
+            overflow-y: auto;
+        }
+        
+        .page-title {
+            font-size: 32px;
+            color: #7b1113;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .category-list {
+            list-style: none;
+        }
+        
+        .category-item {
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+        }
+        
+        .category-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #7b1113;
+            font-size: 24px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .arrow-icon {
+            font-size: 24px;
+        }
+        
+        .add-course-btn {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .add-course-btn button {
+            background-color: white;
+            color: #00BFA5;
+            border: none;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 10px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .add-icon {
+            margin-left: 5px;
+            font-size: 24px;
+        }
+        /* Quiz Result Styles */
+        
+        .quiz-results-section {
+            margin-top: 20px;
+        }
+        
+        .quiz-results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .quiz-result-card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .quiz-result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .quiz-result-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .file-card {
+            display: flex;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #f1f1f1;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        .file-icon i {
+            color: #9c2932;
+            font-size: 20px;
+        }
+        
+        .file-info {
+            flex: 1;
+        }
+        
+        .file-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .file-details {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 3px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Sidebar open button -->
+    <div class="sidebar-open">
+        <i class="fas fa-bars" style="font-size: 18px;"></i>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <span class="sidebar-close">×</span>
+            <div class="logo">
+                <img src="3.png" alt="StudyHub Logo">
+            </div>
+
+            <a href="dashboard.html" class="menu-item">
+                <i class="fas fa-th-large icon-dashboard" style="font-size: 22px;"></i>
+                <span class="menu-text">Dashboard</span>
+            </a>
+
+            <a href="upload.html" class="menu-item">
+                <i class="fas fa-upload icon-upload" style="font-size: 22px;"></i>
+                <span class="menu-text">Upload</span>
+            </a>
+
+            <a href="quiz.html" class="menu-item">
+                <i class="fas fa-question-circle icon-quizzes" style="font-size: 22px;"></i>
+                <span class="menu-text">Quizzes</span>
+            </a>
+
+            <a href="library.html" class="menu-item active">
+                <i class="fas fa-book icon-library" style="font-size: 22px;"></i>
+                <span class="menu-text">My Library</span>
+            </a>
+
+            <a href="chatbot.html" class="menu-item">
+                <i class="fas fa-comment-dots icon-chatbot" style="font-size: 22px;"></i>
+                <span class="menu-text">AI Chatbot</span>
+            </a>
+
+            <a href="flashcards.html" class="menu-item">
+                <i class="far fa-clone icon-flashcards" style="font-size: 22px;"></i>
+                <span class="menu-text">Flashcards</span>
+            </a>
+
+            <a href="community.html" class="menu-item">
+                <i class="fas fa-users icon-communities" style="font-size: 22px;"></i>
+                <span class="menu-text">Communities</span>
+            </a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header with Search and User Menu -->
+            <div class="header">
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="Search...">
+                </div>
+
+                <div class="user-menu">
+                    <div class="avatar">M</div>
+                    <span class="username">Mercy D. ▾</span>
+                    <button class="logout-btn">Log out</button>
+                </div>
+            </div>
+
+            <div class="content">
+                <h1 class="page-title">My Library</h1>
+
+                <ul class="category-list">
+                    <!-- Quiz Results Category - Always shown -->
+                    <li class="category-item">
+                        <a href="#" class="category-link" id="quiz-results-link">
+                            <span>Quiz Results</span>
+                            <i class="fas fa-angle-right arrow-icon"></i>
+                        </a>
+                        <div class="quiz-results-section" style="display: none;">
+                            <div class="quiz-results-grid">
+                                <!-- Quiz results will be loaded here -->
+                            </div>
+                        </div>
+                    </li>
+
+                    <!-- Add more categories as needed -->
+                    <li class="category-item">
+                        <a href="#" class="category-link">
+                            <span>My Documents</span>
+                            <i class="fas fa-angle-right arrow-icon"></i>
+                        </a>
+                    </li>
+
+                    <li class="category-item">
+                        <a href="#" class="category-link">
+                            <span>Study Materials</span>
+                            <i class="fas fa-angle-right arrow-icon"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Footer Toggle -->
+            <div class="footer-toggle">
+                <div class="toggle-switch"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle switch functionality
+        const toggleSwitch = document.querySelector('.toggle-switch');
+        toggleSwitch.addEventListener('click', function() {
+            this.classList.toggle('active');
+        });
+
+        // Sidebar close functionality with reopen capability
+        const sidebarClose = document.querySelector('.sidebar-close');
+        const sidebarOpen = document.querySelector('.sidebar-open');
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+        const footerToggle = document.querySelector('.footer-toggle');
+
+        // Function to close sidebar
+        function closeSidebar() {
+            sidebar.style.width = '0';
+            sidebar.style.padding = '0';
+            sidebar.style.overflow = 'hidden';
+            mainContent.style.marginLeft = '0';
+            sidebarOpen.style.display = 'flex';
+            // Adjust footer toggle position
+            footerToggle.style.left = '20px';
+        }
+
+        // Function to open sidebar
+        function openSidebar() {
+            sidebar.style.width = '125px';
+            sidebar.style.padding = '20px 0 0 0';
+            sidebar.style.overflow = 'visible';
+            sidebarOpen.style.display = 'none';
+            // Adjust footer toggle position
+            footerToggle.style.left = '20px';
+        }
+
+        // Close sidebar when X is clicked
+        sidebarClose.addEventListener('click', closeSidebar);
+
+        // Open sidebar when menu button is clicked
+        sidebarOpen.addEventListener('click', openSidebar);
+
+        // Update active class based on current page
+        const menuItems = document.querySelectorAll('.menu-item');
+        const currentPage = window.location.pathname.split('/').pop();
+
+        menuItems.forEach(item => {
+            const itemPage = item.getAttribute('href');
+            if (itemPage === currentPage) {
+                item.classList.add('active');
+            } else if (currentPage === '' && itemPage === 'dashboard.html') {
+                // Set dashboard as active on main page
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+
+        // Make logout button functional
+        const logoutBtn = document.querySelector('.logout-btn');
+        logoutBtn.addEventListener('click', function() {
+            alert('Logout functionality would go here');
+        });
+
+        // Add click functionality to quiz results link
+        document.getElementById('quiz-results-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            const resultsSection = document.querySelector('.quiz-results-section');
+            resultsSection.style.display = resultsSection.style.display === 'none' ? 'block' : 'none';
+
+            // Change the arrow icon
+            const arrowIcon = this.querySelector('.arrow-icon');
+            if (resultsSection.style.display === 'none') {
+                arrowIcon.className = 'fas fa-angle-right arrow-icon';
+            } else {
+                arrowIcon.className = 'fas fa-angle-down arrow-icon';
+            }
+        });
+
+        // Add click functionality to other category items
+        document.querySelectorAll('.category-link:not(#quiz-results-link)').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Opening ' + this.querySelector('span').innerText + ' section');
+            });
+        });
+
+        // Function to display quiz results
+        function displayQuizResults() {
+            // Get quiz results from localStorage
+            const quizResults = JSON.parse(localStorage.getItem('quiz-results')) || [];
+            console.log("Quiz results found:", quizResults); // Debug log
+
+            // Get the grid element for displaying quiz results
+            const quizResultsGrid = document.querySelector('.quiz-results-grid');
+
+            if (quizResults.length === 0) {
+                quizResultsGrid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; color: #888; padding: 20px; background-color: #f9f9f9; border-radius: 8px;">No quiz results saved yet</div>`;
+                return;
+            }
+
+            // Generate HTML for each quiz result
+            let html = '';
+            quizResults.forEach(result => {
+                // Format date
+                const resultDate = new Date(result.date || Date.now());
+                const formattedDate = resultDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+
+                // Determine badge color
+                let badgeColor = '#FFD700'; // Gold
+                if (result.badge && result.badge.includes('Silver')) {
+                    badgeColor = '#C0C0C0';
+                } else if (result.badge && result.badge.includes('Bronze')) {
+                    badgeColor = '#CD7F32';
+                }
+
+                html += `
+                <div class="quiz-result-card">
+                    <div class="quiz-result-header">
+                        <div style="font-weight: bold; color: #333;">${result.name || 'Quiz Result'}</div>
+                        <div style="background-color: ${badgeColor}; color: #333; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;">${result.badge || 'No Badge'}</div>
+                    </div>
+                    <div style="color: #666; margin-bottom: 10px;">Date: ${formattedDate}</div>
+                    <div style="color: #666; margin-bottom: 10px;">Time: ${result.timeElapsed || 'N/A'}</div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                        <div style="color: #2ecc71;">Correct: ${result.correctAnswers || 0}</div>
+                        <div style="color: #e74c3c;">Wrong: ${result.wrongAnswers || 0}</div>
+                    </div>
+                    <div style="margin-top: 15px; font-weight: bold; color: #9c2932;">Score: +${result.points || 0} points</div>
+                    <div style="margin-top: 20px; display: flex; justify-content: space-between;">
+                        <button onclick="viewQuizResultDetails('${result.id || ''}')" style="background-color: #9c2932; color: white; border: none; border-radius: 4px; padding: 6px 12px; cursor: pointer;">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                        <button onclick="deleteQuizResult('${result.id || ''}')" style="background: none; border: none; color: #666; cursor: pointer;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                `;
+            });
+
+            quizResultsGrid.innerHTML = html;
+        }
+
+        // Function to view quiz result details
+        function viewQuizResultDetails(resultId) {
+            const quizResults = JSON.parse(localStorage.getItem('quiz-results')) || [];
+            const result = quizResults.find(r => r.id == resultId);
+
+            if (!result) {
+                alert('Quiz result not found');
+                return;
+            }
+
+            // Create a modal to display the details
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+            modal.style.display = 'flex';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            modal.style.zIndex = '1000';
+
+            const modalContent = document.createElement('div');
+            modalContent.style.width = '90%';
+            modalContent.style.maxWidth = '500px';
+            modalContent.style.backgroundColor = '#fff';
+            modalContent.style.borderRadius = '10px';
+            modalContent.style.padding = '20px';
+            modalContent.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+
+            // Set modal content
+            modalContent.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="margin: 0; color: #333;">${result.name || 'Quiz Result'}</h2>
+                <span style="cursor: pointer; font-size: 24px;" id="close-modal">&times;</span>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <i class="fas fa-trophy" style="color: ${result.badge && result.badge.includes('Gold') ? '#FFD700' : result.badge && result.badge.includes('Silver') ? '#C0C0C0' : '#CD7F32'}; margin-right: 10px;"></i>
+                    <span style="font-weight: bold;">${result.badge || 'No Badge'}</span>
+                </div>
+                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <i class="fas fa-calendar" style="color: #666; margin-right: 10px;"></i>
+                    <span>${new Date(result.date || Date.now()).toLocaleString()}</span>
+                </div>
+                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <i class="fas fa-clock" style="color: #666; margin-right: 10px;"></i>
+                    <span>Time taken: ${result.timeElapsed || 'N/A'}</span>
+                </div>
+                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <i class="fas fa-file-alt" style="color: #666; margin-right: 10px;"></i>
+                    <span>Based on: ${result.lectureFile || 'N/A'}</span>
+                </div>
+            </div>
+            <div style="background-color: #f9f9f9; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span style="color: #2ecc71; font-weight: bold;">Correct answers: ${result.correctAnswers || 0}</span>
+                    <span style="color: #e74c3c; font-weight: bold;">Wrong answers: ${result.wrongAnswers || 0}</span>
+                </div>
+                <div style="font-size: 18px; font-weight: bold; color: #9c2932; text-align: center;">
+                    Total Score: +${result.points || 0} points
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <button id="close-button" style="background-color: #9c2932; color: white; border: none; border-radius: 4px; padding: 8px 16px; cursor: pointer; font-weight: bold;">
+                    Close
+                </button>
+            </div>
+            `;
+
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+
+            // Close modal events
+            document.getElementById('close-modal').addEventListener('click', function() {
+                document.body.removeChild(modal);
+            });
+
+            document.getElementById('close-button').addEventListener('click', function() {
+                document.body.removeChild(modal);
+            });
+        }
+
+        // Function to delete a quiz result
+        function deleteQuizResult(resultId) {
+            if (confirm('Are you sure you want to delete this quiz result?')) {
+                // Get existing quiz results
+                let quizResults = JSON.parse(localStorage.getItem('quiz-results')) || [];
+
+                // Filter out the result to delete
+                quizResults = quizResults.filter(result => result.id != resultId);
+
+                // Save back to localStorage
+                localStorage.setItem('quiz-results', JSON.stringify(quizResults));
+
+                // Refresh the display
+                displayQuizResults();
+            }
+        }
+
+        // Call the display function when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM loaded, displaying quiz results"); // Debug log
+            displayQuizResults();
+        });
+    </script>
+</body>
+
+</html>

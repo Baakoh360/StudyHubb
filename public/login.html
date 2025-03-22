@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyHebb - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-image: url('2.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        /* Dark overlay */
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(50, 0, 0, 0.6);
+            z-index: 1;
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+            z-index: 2;
+            text-align: center;
+        }
+        
+        .logo {
+            margin-bottom: 30px;
+        }
+        
+        .logo img {
+            width: 180px;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        
+        .input-group label {
+            display: block;
+            color: white;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 10px 5px;
+            font-size: 16px;
+            background-color: transparent;
+            border: none;
+            border-bottom: 2px solid white;
+            color: white;
+            outline: none;
+        }
+        
+        .input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #FFD700;
+            color: #800000;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: background-color 0.3s;
+        }
+        
+        .login-btn:hover {
+            background-color: #F0C800;
+        }
+        
+        .divider {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        .social-login {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        
+        .social-btn {
+            width: 30%;
+            padding: 10px;
+            border: 2px solid white;
+            border-radius: 5px;
+            background-color: transparent;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .social-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .signup-text {
+            color: white;
+            font-size: 16px;
+        }
+        
+        .signup-link {
+            color: #FFD700;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .signup-link:hover {
+            text-decoration: underline;
+        }
+        /* Responsive adjustments */
+        
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 20px;
+            }
+            .social-login {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .social-btn {
+                width: 100%;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <a href="index.html">
+                <img src="12.png" alt="StudyHubb Logo">
+            </a>
+        </div>
+
+        <form id="login-form" action="dashboard.html" method="GET">
+            <div class="input-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+
+        <div class="divider">Or log in with</div>
+
+        <div class="social-login">
+            <button class="social-btn google-btn" onclick="socialLogin('google')">
+                <i class="fab fa-google"></i>
+            </button>
+            <button class="social-btn facebook-btn" onclick="socialLogin('facebook')">
+                <i class="fab fa-facebook-f"></i>
+            </button>
+            <button class="social-btn email-btn" onclick="socialLogin('email')">
+                <i class="fas fa-envelope"></i>
+            </button>
+        </div>
+
+        <div class="signup-text">
+            Don't have an account? <a href="signup.html" class="signup-link">Sign Up</a>
+        </div>
+    </div>
+
+    <script>
+        // Form submission with validation
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Basic validation
+            if (!email || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            // For demonstration purposes, we'll just redirect to the dashboard
+            // In a real application, you would validate credentials on the server
+            localStorage.setItem('studyHebb_user', email);
+            window.location.href = 'dashboard.html';
+        });
+
+        // Social login function
+        function socialLogin(provider) {
+            // This would normally connect to OAuth providers
+            console.log(`Attempting to login with ${provider}`);
+
+            // For demo purposes, simulate a successful login and redirect
+            localStorage.setItem('studyHebb_user', `${provider}_user@example.com`);
+            localStorage.setItem('studyHebb_login_method', provider);
+
+            // Redirect to dashboard after short delay
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1000);
+        }
+    </script>
+</body>
+
+</html>

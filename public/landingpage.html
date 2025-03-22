@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyHubb</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            overflow-x: hidden;
+        }
+        
+        .section {
+            height: 100vh;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            height: 100%;
+        }
+        /* Header styles */
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            width: 150px;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+        }
+        
+        .btn-outline {
+            border: 1px solid #800000;
+            color: #800000;
+            background-color: transparent;
+        }
+        
+        .btn-solid {
+            background-color: #800000;
+            color: white;
+            border: none;
+        }
+        /* Hero section */
+        
+        .hero-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: calc(100% - 100px);
+        }
+        
+        .hero-text {
+            flex: 1;
+            padding-right: 20px;
+        }
+        
+        .hero-text h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .hero-text h1 span {
+            color: #FFD700;
+            font-weight: bold;
+        }
+        
+        .hero-text p {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .hero-image img {
+            max-height: 400px;
+        }
+        /* How to use section */
+        
+        .how-to-use {
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        .how-to-use h2 {
+            font-size: 2rem;
+            margin-bottom: 40px;
+            color: #800000;
+        }
+        
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .step-card {
+            border: 2px solid #800000;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 200px;
+        }
+        
+        .step-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 15px;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #800000;
+        }
+        
+        .step-description {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        /* Why choose us section */
+        
+        .why-choose-us {
+            background-color: #800000;
+            color: white;
+            padding: 40px 0;
+        }
+        
+        .why-choose-us h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 40px;
+            color: #FFD700;
+        }
+        
+        .benefits-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+        
+        .benefit-icon {
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            padding: 10px;
+        }
+        
+        .benefit-content h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #FFD700;
+        }
+        
+        .benefit-content p {
+            font-size: 0.9rem;
+            color: #f5f5f5;
+        }
+        /* Testimonials section */
+        
+        .testimonials {
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        .testimonials h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #800000;
+        }
+        
+        .testimonials-intro {
+            margin-bottom: 40px;
+            color: #333;
+        }
+        
+        .testimonials-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .testimonial-card {
+            border: 2px solid #800000;
+            border-radius: 15px;
+            padding: 20px;
+            width: 300px;
+            text-align: left;
+        }
+        
+        .testimonial-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            background-color: #800000;
+        }
+        
+        .testimonial-name {
+            font-weight: bold;
+            color: #800000;
+            margin-bottom: 5px;
+        }
+        
+        .testimonial-title {
+            font-size: 0.9rem;
+            color: #800000;
+            margin-bottom: 10px;
+        }
+        
+        .testimonial-text {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        
+        .testimonial-rating {
+            color: #FFD700;
+            font-size: 1.2rem;
+        }
+        
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+        
+        .carousel-nav button {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #800000;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+        /* Download section */
+        
+        .download-app {
+            padding: 40px 0;
+        }
+        
+        .download-app h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #800000;
+        }
+        
+        .download-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        
+        .download-text {
+            flex: 1;
+            padding-right: 20px;
+        }
+        
+        .download-text p {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .app-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .app-button {
+            height: 40px;
+        }
+        
+        .app-screenshots {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .app-screenshots img {
+            max-height: 300px;
+        }
+        /* Footer */
+        
+        footer {
+            background-color: #800000;
+            color: white;
+            padding: 40px 0;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+        
+        .footer-column h3 {
+            color: #FFD700;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .footer-column ul li a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer-bottom {
+            margin-top: 40px;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .footer-logo {
+            width: 120px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Section 1: Hero -->
+    <section class="section" id="hero">
+        <div class="container">
+            <header>
+                <img src="/api/placeholder/150/50" alt="StudyHubb Logo" class="logo">
+                <div class="auth-buttons">
+                    <a href="#" class="btn btn-outline">Sign Up</a>
+                    <a href="#" class="btn btn-solid">Login</a>
+                </div>
+            </header>
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Study smarter.<br><span>Not</span> harder.</h1>
+                    <p>Get personalized with AI-Generated summaries, quizzes, and flashcards instantly.</p>
+                    <a href="#" class="btn btn-solid">Upload Your Notes</a>
+                    <div style="margin-top: 20px;">
+                        <a href="#" class="btn btn-outline">Try for free</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="/api/placeholder/350/400" alt="Student with books">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: How to Use -->
+    <section class="section" id="how-to-use">
+        <div class="container">
+            <div class="how-to-use">
+                <h2>How To Use StudyHubb</h2>
+                <div class="steps-container">
+                    <div class="step-card">
+                        <div class="step-icon">📚</div>
+                        <h3 class="step-title">Upload Study Materials</h3>
+                        <p class="step-description">Upload files ranging from class notes to textbooks</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon">🤖</div>
+                        <h3 class="step-title">AI Processes Your Content</h3>
+                        <p class="step-description">Wait few seconds for our StudyBuddy AI to process and generate responses</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon">📋</div>
+                        <h3 class="step-title">Get Personalized Study Materials</h3>
+                        <p class="step-description">Receive auto-generated summaries, quizzes, and flashcards</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon">👥</div>
+                        <h3 class="step-title">Share With Study AI</h3>
+                        <p class="step-description">Publish into a community to help others benefit</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon">✅</div>
+                        <h3 class="step-title">Test Your Knowledge</h3>
+                        <p class="step-description">Share with a community to help others benefit</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon">📈</div>
+                        <h3 class="step-title">Expand & Improve</h3>
+                        <p class="step-description">Share with a community to help others benefit</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Why Choose Us -->
+    <section class="section" id="why-choose-us">
+        <div class="container">
+            <div class="why-choose-us">
+                <h2>Why Choose Us?</h2>
+                <p style="text-align: center; margin-bottom: 30px;">Interactive • Educational Entertaining</p>
+                <div class="benefits-container">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🧠</div>
+                        <div class="benefit-content">
+                            <h3>AI-Powered Learning</h3>
+                            <p>Get instant summaries, quizzes, and flashcards tailored to your needs.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">⏰</div>
+                        <div class="benefit-content">
+                            <h3>Save Study Time</h3>
+                            <p>No more long hours of summarizing. Upload, generate, and learn faster.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🔍</div>
+                        <div class="benefit-content">
+                            <h3>Unlock Knowledge Through Engaging Quizzes</h3>
+                            <p>Discover a dynamic way to test yourself, track progress, challenge yourself, and enhance learning.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">📝</div>
+                        <div class="benefit-content">
+                            <h3>Publish & Import Study Materials</h3>
+                            <p>Share your notes, join a hub to collaborate, learn, and grow with peers.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">👤</div>
+                        <div class="benefit-content">
+                            <h3>Personalized Learning</h3>
+                            <p>Adaptive quizzes and AI-generated questions fit your study style.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">📊</div>
+                        <div class="benefit-content">
+                            <h3>Track Your Progress</h3>
+                            <p>Earn streaks & badges while keeping track of your learning journey.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Testimonials -->
+    <section class="section" id="testimonials">
+        <div class="container">
+            <div class="testimonials">
+                <h2>What Our Users Say</h2>
+                <p class="testimonials-intro">Join thousands of learners who have improved their study habits with our AI-powered tools</p>
+                <div class="testimonials-container">
+                    <div class="testimonial-card">
+                        <div class="testimonial-avatar"></div>
+                        <h3 class="testimonial-name">Sarah, Popular Science Major</h3>
+                        <p class="testimonial-text">This platform has completely changed the way I study! Now I can...</p>
+                        <div class="testimonial-rating">★★★★★</div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-avatar"></div>
+                        <h3 class="testimonial-name">Emanuel, Medical Student</h3>
+                        <p class="testimonial-title">Medical school requires a lot of...</p>
+                        <div class="testimonial-rating">★★★★★</div>
+                    </div>
+                    <div class="testimonial-card">
+                        <div class="testimonial-avatar"></div>
+                        <h3 class="testimonial-name">Aisha, High School Teacher</h3>
+                        <p class="testimonial-text">I find this tool incredible. It helps me prepare...</p>
+                        <div class="testimonial-rating">★★★★★</div>
+                    </div>
+                    <div class="carousel-nav">
+                        <button class="prev-btn">‹</button>
+                        <button class="next-btn">›</button>
+                    </div>
+                </div>
+                <a href="#" class="btn btn-solid">Join a Community now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Download App & Footer -->
+    <section class="section" id="download-app">
+        <div class="container">
+            <div class="download-app">
+                <h2>Download Our App & Study Anytime, Anywhere</h2>
+                <div class="download-content">
+                    <div class="download-text">
+                        <p>Get the best study experience on the go with our mobile app.<br>Available on Android & iOS!</p>
+                        <div class="app-buttons">
+                            <img src="/api/placeholder/120/40" alt="Google Play" class="app-button">
+                            <img src="/api/placeholder/120/40" alt="App Store" class="app-button">
+                        </div>
+                    </div>
+                    <div class="app-screenshots">
+                        <img src="/api/placeholder/250/400" alt="App Screenshot">
+                    </div>
+                </div>
+            </div>
+            <footer>
+                <div class="footer-content">
+                    <div class="footer-column">
+                        <h3>Product</h3>
+                        <ul>
+                            <li><a href="#">Features</a></li>
+                            <li><a href="#">Pricing</a></li>
+                            <li><a href="#">Mobile App</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Resources</h3>
+                        <ul>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#">FAQs</a></li>
+                            <li><a href="#">Help Center</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Legal</h3>
+                        <ul>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Contact</h3>
+                        <ul>
+                            <li>Location: Kumasi-Ghana</li>
+                            <li>Email: support@studyhubb.com</li>
+                            <li>Phone: +233 599 123 456</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <img src="/api/placeholder/120/40" alt="StudyHubb Logo" class="footer-logo">
+                    <p>© 2025 StudyHubb. All rights reserved.</p>
+                </div>
+            </footer>
+        </div>
+    </section>
+
+    <script>
+        // Simple JavaScript for the carousel
+        document.addEventListener('DOMContentLoaded', function() {
+            const prevBtn = document.querySelector('.prev-btn');
+            const nextBtn = document.querySelector('.next-btn');
+            const testimonials = document.querySelectorAll('.testimonial-card');
+
+            let currentIndex = 0;
+
+            // Handle smooth scrolling between sections
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Optional: Add scroll snap for full-screen sections
+            window.addEventListener('scroll', function() {
+                const sections = document.querySelectorAll('.section');
+                const scrollPosition = window.scrollY;
+                const windowHeight = window.innerHeight;
+
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.offsetHeight;
+
+                    if (scrollPosition >= sectionTop - windowHeight / 2 &&
+                        scrollPosition < sectionTop + sectionHeight - windowHeight / 2) {
+                        section.classList.add('active');
+                    } else {
+                        section.classList.remove('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

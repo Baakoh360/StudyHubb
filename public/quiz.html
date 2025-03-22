@@ -1,0 +1,3891 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyHub - Quizzes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f7f7f7;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        /* Sidebar */
+        
+        .sidebar {
+            width: 125px;
+            background-color: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding-top: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            color: #888;
+            font-size: 18px;
+        }
+        
+        .sidebar-open {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            background-color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            display: none;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 0 20px 20px;
+        }
+        
+        .logo img {
+            height: 30px;
+        }
+        
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 5px;
+            color: #444;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .menu-item:hover,
+        .menu-item.active {
+            background-color: #f5f5f5;
+        }
+        
+        .menu-item.active {
+            border-left: 3px solid #9c2932;
+        }
+        
+        .menu-text {
+            font-size: 12px;
+            text-align: center;
+            color: #333;
+            margin-top: 5px;
+        }
+        /* Icon colors */
+        
+        .icon-dashboard {
+            color: #3498db;
+        }
+        /* Blue */
+        
+        .icon-upload {
+            color: #2ecc71;
+        }
+        /* Green */
+        
+        .icon-quizzes {
+            color: #f1c40f;
+        }
+        /* Yellow */
+        
+        .icon-library {
+            color: #9b59b6;
+        }
+        /* Purple */
+        
+        .icon-chatbot {
+            color: #e74c3c;
+        }
+        /* Red */
+        
+        .icon-flashcards {
+            color: #1abc9c;
+        }
+        /* Teal */
+        
+        .icon-communities {
+            color: #e67e22;
+        }
+        /* Orange */
+        /* Main Content */
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+        /* Header */
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 20px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+        }
+        
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #9c2932;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 5px;
+            font-size: 14px;
+        }
+        
+        .username {
+            margin-right: 15px;
+            font-size: 14px;
+            color: #444;
+        }
+        
+        .logout-btn {
+            padding: 6px 12px;
+            background-color: transparent;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #444;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background-color: #f5f5f5;
+        }
+        /* Welcome Card */
+        
+        .welcome-card {
+            background-color: #fff2ea;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .welcome-text {
+            color: #666;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+        
+        .user-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .start-button {
+            display: inline-block;
+            color: #9c2932;
+            font-size: 14px;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+        /* Stats Grid */
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background-color: #fff9db;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-title {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        
+        .stat-value {
+            font-size: 40px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .stat-icons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .folder-icon {
+            color: #f1c40f;
+            font-size: 24px;
+            opacity: 0.5;
+        }
+        
+        .fire-icon {
+            color: #e67e22;
+            font-size: 24px;
+            opacity: 0.5;
+        }
+        
+        .doc-icon {
+            color: #3498db;
+            font-size: 24px;
+            opacity: 0.5;
+        }
+        /* Recents Section */
+        
+        .recents-section {
+            margin-top: 30px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .no-recents {
+            color: #888;
+            font-size: 14px;
+            padding: 20px 0;
+        }
+        /* Footer Toggle */
+        
+        .footer-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            z-index: 90;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            background-color: #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .toggle-switch.active {
+            background-color: #9c2932;
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+        }
+        /* Upload Section */
+        
+        .upload-section {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .upload-title {
+            font-size: 24px;
+            color: #00a2cc;
+            margin-bottom: 15px;
+        }
+        
+        .upload-subtitle {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .upload-instruction {
+            font-size: 18px;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .upload-types {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto 60px;
+        }
+        
+        .upload-type {
+            background-color: #f9f9f9;
+            border-radius: 15px;
+            padding: 40px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .upload-type:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .upload-type-title {
+            font-size: 22px;
+            color: #666;
+            margin-top: 20px;
+        }
+        
+        .upload-icon {
+            font-size: 40px;
+            color: #aaa;
+        }
+        
+        .prompt-input {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            display: flex;
+        }
+        
+        .prompt-field {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        
+        .send-button {
+            background-color: transparent;
+            border: none;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #9c2932;
+            font-size: 20px;
+        }
+        /* Content area styles */
+        
+        .content-area {
+            flex: 1;
+            margin-left: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-height: calc(100vh - 90px);
+            overflow-y: auto;
+        }
+        
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .content-header h1 {
+            font-size: 24px;
+            color: #8b0000;
+        }
+        
+        .close-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+        /* Course selection list */
+        
+        .course-list {
+            list-style: none;
+        }
+        
+        .course-item {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .course-item:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .course-name {
+            font-size: 18px;
+            color: #8b0000;
+        }
+        
+        .course-item .arrow {
+            color: #999;
+        }
+        
+        .dynamic-content {
+            padding: 20px 0;
+        }
+        
+        .back-button {
+            background: none;
+            border: none;
+            color: #8b0000;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .processing-indicator {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .icon-container {
+            margin-bottom: 15px;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 400px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: #4CAF50;
+            transition: width 0.5s ease;
+        }
+        
+        .course-list {
+            margin-bottom: 20px;
+        }
+        
+        .quiz-card {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin: 20px auto;
+            max-width: 800px;
+            position: relative;
+        }
+        
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .quiz-header h2 {
+            font-size: 24px;
+            color: #333;
+            margin: 0;
+            font-weight: 700;
+        }
+        
+        .quiz-timer {
+            display: flex;
+            align-items: center;
+            background-color: #f7f9fc;
+            padding: 8px 15px;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .quiz-timer img {
+            width: 25px;
+            height: 25px;
+            margin-right: 8px;
+        }
+        
+        #quiz-timer {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .question-container {
+            margin-bottom: 30px;
+            min-height: 300px;
+        }
+        
+        .question {
+            background-color: #f7f9fc;
+            border-radius: 10px;
+            padding: 20px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .question h3 {
+            font-size: 20px;
+            color: #2e5bff;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        .question p {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        
+        .option {
+            background-color: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option:hover {
+            border-color: #2e5bff;
+            background-color: #f0f5ff;
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+        
+        .option label {
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .option.selected {
+            border-color: #2e5bff;
+            background-color: #f0f5ff;
+        }
+        
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+        }
+        
+        .nav-button {
+            background-color: #2e5bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 120px;
+        }
+        
+        .nav-button:hover {
+            background-color: #1a46cc;
+        }
+        
+        .nav-button.prev {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .nav-button.prev:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .nav-button.finish {
+            background-color: #00a86b;
+        }
+        
+        .nav-button.finish:hover {
+            background-color: #008f5b;
+        }
+        
+        .quiz-controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 15px;
+        }
+        
+        .control-button {
+            background-color: #f0f0f0;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .control-button:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .control-button.pause {
+            color: #2e5bff;
+        }
+        
+        .control-button.stop {
+            color: #ff3b30;
+        }
+        
+        .control-button i {
+            font-size: 18px;
+        }
+        
+        .question-indicator {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 8px;
+        }
+        
+        .question-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+        }
+        
+        .question-dot.active {
+            background-color: #2e5bff;
+        }
+        
+        .scoreboard-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            font-family: Arial, sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .scoreboard-card {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .scoreboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .scoreboard-title {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+            color: #000;
+        }
+        
+        .trophy-section {
+            position: relative;
+            width: 120px;
+            height: 120px;
+        }
+        
+        .trophy-image {
+            height: 120px;
+            position: absolute;
+            right: 0;
+            z-index: 1;
+        }
+        
+        .flower {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #9a0000;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+            left: 20px;
+            top: 5px;
+            transform: rotate(-20deg);
+        }
+        
+        .flower:before {
+            content: "";
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #9a0000;
+            border-radius: 50%;
+            transform: rotate(45deg);
+        }
+        
+        .flower-center {
+            width: 30px;
+            height: 30px;
+            background-color: #ffcd00;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3;
+            font-size: 8px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        .congratulations-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .congratulations {
+            color: #008753;
+            font-size: 36px;
+            margin: 0 0 10px;
+            font-weight: bold;
+        }
+        
+        .score-text {
+            font-size: 24px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .points {
+            color: #ffcd00;
+        }
+        
+        .time-text {
+            color: #600;
+            margin: 5px 0;
+            font-size: 18px;
+        }
+        
+        .confetti-section {
+            position: absolute;
+            right: 60px;
+            top: 170px;
+        }
+        
+        .confetti-image {
+            width: 80px;
+            height: auto;
+        }
+        
+        .score-details {
+            display: flex;
+            border-top: 1px solid #ddd;
+            margin-top: 20px;
+        }
+        
+        .detail-column {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .border-sides {
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+        }
+        
+        .detail-text {
+            margin: 5px 0;
+            color: #600;
+            font-weight: bold;
+        }
+        
+        .share-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #600;
+        }
+        
+        .share-icon {
+            width: 30px;
+            margin-right: 5px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            margin-top: 20px;
+            gap: 15px;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .action-btn {
+            padding: 15px 0;
+            width: 45%;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .try-again {
+            background-color: #600;
+        }
+        
+        .save {
+            background-color: #008753;
+        }
+        /* Balloon Animation Styles */
+        
+        #balloons-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 5;
+        }
+        
+        .balloon {
+            position: absolute;
+            width: 40px;
+            height: 50px;
+            border-radius: 50%;
+            bottom: -100px;
+            opacity: 0.7;
+            animation-name: float-up;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: 1;
+            z-index: 5;
+        }
+        
+        .balloon::before {
+            content: "";
+            position: absolute;
+            width: 6px;
+            height: 15px;
+            background: rgba(200, 200, 200, 0.7);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        @keyframes float-up {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(20deg);
+                opacity: 0;
+            }
+        }
+        
+        .balloon-wobble {
+            animation-name: float-up, wobble;
+            animation-timing-function: ease-in-out, ease-in-out;
+            animation-iteration-count: 1, infinite;
+        }
+        
+        @keyframes wobble {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(20px);
+            }
+        }
+        /* Quiz styles */
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Sidebar open button -->
+    <div class="sidebar-open">
+        <i class="fas fa-bars" style="font-size: 18px;"></i>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <span class="sidebar-close">×</span>
+            <div class="logo">
+                <img src="3.png" alt="StudyHub Logo">
+            </div>
+
+            <a href="dashboard.html" class="menu-item active">
+                <i class="fas fa-th-large icon-dashboard" style="font-size: 22px;"></i>
+                <span class="menu-text">Dashboard</span>
+            </a>
+
+            <a href="upload.html" class="menu-item">
+                <i class="fas fa-upload icon-upload" style="font-size: 22px;"></i>
+                <span class="menu-text">Upload</span>
+            </a>
+
+            <a href="quiz.html" class="menu-item">
+                <i class="fas fa-question-circle icon-quizzes" style="font-size: 22px;"></i>
+                <span class="menu-text">Quizzes</span>
+            </a>
+
+            <a href="library.html" class="menu-item">
+                <i class="fas fa-book icon-library" style="font-size: 22px;"></i>
+                <span class="menu-text">My Library</span>
+            </a>
+
+            <a href="chatbot.html" class="menu-item">
+                <i class="fas fa-comment-dots icon-chatbot" style="font-size: 22px;"></i>
+                <span class="menu-text">AI Chatbot</span>
+            </a>
+
+            <a href="flashcards.html" class="menu-item">
+                <i class="far fa-clone icon-flashcards" style="font-size: 22px;"></i>
+                <span class="menu-text">Flashcards</span>
+            </a>
+
+            <a href="community.html" class="menu-item">
+                <i class="fas fa-users icon-communities" style="font-size: 22px;"></i>
+                <span class="menu-text">Communities</span>
+            </a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header with Search and User Menu -->
+            <div class="header">
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="Search...">
+                </div>
+                <div class="user-menu">
+                    <div class="avatar">M</div>
+                    <span class="username">Me ▾</span>
+                    <button class="logout-btn">
+                <i class="fas fa-sign-out-alt logout-icon"></i>
+                Log out
+            </button>
+                </div>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="main-content">
+                <div class="content-area">
+                    <div class="content-header">
+                        <h1>Select course or folder</h1>
+                        <button class="close-button">×</button>
+                    </div>
+
+                    <ul class="course-list">
+                        <li class="course-item" data-content="lecture-notes">
+                            <div class="course-name">Lecture Notes</div>
+                            <div class="arrow">›</div>
+                        </li>
+                        <li class="course-item" data-content="books">
+                            <div class="course-name">Books</div>
+                            <div class="arrow">›</div>
+                        </li>
+                        <li class="course-item" data-content="images">
+                            <div class="course-name">Images</div>
+                            <div class="arrow">›</div>
+                        </li>
+                    </ul>
+
+                    <!-- AI Thinking Section for Lecture Notes -->
+                    <div id="lecture-notes-content" class="dynamic-content" style="display: none;">
+                        <div class="content-header">
+                            <h1>Lecture Notes</h1>
+                            <button class="back-button">← Back</button>
+                        </div>
+                        <div class="content-body">
+                            <div class="processing-indicator">
+                                <div class="icon-container">
+                                    <img src="5.png" alt="Processing" style="width: 60px; height: 60px; filter: invert(32%) sepia(77%) saturate(1738%) hue-rotate(343deg) brightness(91%) contrast(95%);">
+                                </div>
+                                <p id="ai-status-text">AI is thinking...</p>
+                                <div class="progress-bar">
+                                    <div id="progress-fill" class="progress" style="width: 0%;"></div>
+                                </div>
+                                <button class="stop-btn">Stop</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Thinking Section for Books -->
+                    <div id="books-content" class="dynamic-content" style="display: none;">
+                        <div class="content-header">
+                            <h1>Books</h1>
+                            <button class="back-button">← Back</button>
+                        </div>
+                        <div class="content-body">
+                            <div class="processing-indicator">
+                                <div class="icon-container">
+                                    <img src="5.png" alt="Processing" style="width: 60px; height: 60px; filter: invert(32%) sepia(77%) saturate(1738%) hue-rotate(343deg) brightness(91%) contrast(95%);">
+                                </div>
+                                <p id="ai-status-text">AI is thinking...</p>
+                                <div class="progress-bar">
+                                    <div id="progress-fill" class="progress" style="width: 0%;"></div>
+                                </div>
+                                <button class="stop-btn">Stop</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Thinking Section for Images -->
+                    <div id="images-content" class="dynamic-content" style="display: none;">
+                        <div class="content-header">
+                            <h1>Images</h1>
+                            <button class="back-button">← Back</button>
+                        </div>
+                        <div class="content-body">
+                            <div class="processing-indicator">
+                                <div class="icon-container">
+                                    <img src="5.png" alt="Processing" style="width: 60px; height: 60px; filter: invert(32%) sepia(77%) saturate(1738%) hue-rotate(343deg) brightness(91%) contrast(95%);">
+                                </div>
+                                <p id="ai-status-text">AI is thinking...</p>
+                                <div class="progress-bar">
+                                    <div id="progress-fill" class="progress" style="width: 0%;"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quiz View - This will be shown after AI thinking completes -->
+                    <div id="quiz-view" style="display: none;">
+                        <div class="quiz-card">
+                            <div class="quiz-header">
+                                <h2>Quiz Title</h2>
+                                <div class="quiz-timer">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/1669/1669667.png" alt="Flower Timer">
+                                    <span id="quiz-timer">00:00</span>
+                                </div>
+                            </div>
+
+                            <div class="question-container">
+                                <!-- Questions will be inserted here by JavaScript -->
+                            </div>
+
+                            <div class="quiz-navigation">
+                                <a href="#" class="nav-button prev" onclick="prevQuestion()" style="visibility: hidden;">
+                            &lt;&lt;Previous
+                        </a>
+                                <a href="#" class="nav-button next" onclick="nextQuestion()" id="next-btn">
+                            Next&gt;&gt;
+                        </a>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Toggle -->
+            <div class="footer-toggle">
+                <div class="toggle-switch"></div>
+            </div>
+            <script>
+                // Toggle switch functionality
+                const toggleSwitch = document.querySelector('.toggle-switch');
+                toggleSwitch.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                });
+
+                // Sidebar functionality
+                const sidebarClose = document.querySelector('.sidebar-close');
+                const sidebarOpen = document.querySelector('.sidebar-open');
+                const sidebar = document.querySelector('.sidebar');
+                const mainContent = document.querySelector('.main-content');
+                const footerToggle = document.querySelector('.footer-toggle');
+
+                // Function to close sidebar
+                function closeSidebar() {
+                    sidebar.style.width = '0';
+                    sidebar.style.padding = '0';
+                    sidebar.style.overflow = 'hidden';
+                    mainContent.style.marginLeft = '0';
+                    sidebarOpen.style.display = 'flex';
+                    // Adjust footer toggle position
+                    footerToggle.style.left = '20px';
+                }
+
+                // Function to open sidebar
+                function openSidebar() {
+                    sidebar.style.width = '125px';
+                    sidebar.style.padding = '20px 0 0 0';
+                    sidebar.style.overflow = 'visible';
+                    sidebarOpen.style.display = 'none';
+                    // Adjust footer toggle position
+                    footerToggle.style.left = '20px';
+                }
+
+                // Sidebar event listeners
+                sidebarClose.addEventListener('click', closeSidebar);
+                sidebarOpen.addEventListener('click', openSidebar);
+
+                // Update active class based on current page
+                const menuItems = document.querySelectorAll('.menu-item');
+                const currentPage = window.location.pathname.split('/').pop();
+
+                menuItems.forEach(item => {
+                    const itemPage = item.getAttribute('href');
+                    if (itemPage === currentPage) {
+                        item.classList.add('active');
+                    } else if (currentPage === '' && itemPage === 'dashboard.html') {
+                        // Set dashboard as active on main page
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                });
+
+                // Make logout button functional
+                const logoutBtn = document.querySelector('.logout-btn');
+                logoutBtn.addEventListener('click', function() {
+                    alert('Logout functionality would go here');
+                });
+
+                // Course navigation
+                const courseItems = document.querySelectorAll('.course-item');
+                const contentSections = document.querySelectorAll('.dynamic-content');
+                const courseList = document.querySelector('.course-list');
+                const backButtons = document.querySelectorAll('.back-button');
+
+                // Add click event to each course item
+                courseItems.forEach(item => {
+                    item.addEventListener('click', function() {
+                        // Get the content ID from data attribute
+                        const contentId = this.getAttribute('data-content') + '-content';
+                        const contentType = this.getAttribute('data-content');
+
+                        // Hide the course list
+                        courseList.style.display = 'none';
+
+                        // Hide all content sections
+                        contentSections.forEach(section => {
+                            section.style.display = 'none';
+                        });
+
+                        // Show the selected content section
+                        document.getElementById(contentId).style.display = 'block';
+
+                        // Update the content header with the selected type
+                        const header = document.querySelector(`#${contentId} .content-header h1`);
+                        if (header) {
+                            header.textContent = this.querySelector('.course-name').textContent;
+                        }
+
+                        // If it's the lecture notes, start the AI thinking animation and prepare quiz
+                        if (contentType === 'lecture-notes') {
+                            // Get uploaded lecture notes from localStorage
+                            const lectureNotes = JSON.parse(localStorage.getItem('lecture-notes')) || [];
+
+                            // For demo, create a sample lecture note if none exists
+                            if (lectureNotes.length === 0) {
+                                lectureNotes.push({
+                                    name: "Introduction To ML.pdf",
+                                    size: "1.2 MB",
+                                    date: "2025-03-12"
+                                });
+                            }
+
+                            // Start AI thinking with the first lecture note
+                            startAiThinking(lectureNotes[0]);
+                        }
+                    });
+                });
+
+                // Add click event to back buttons
+                backButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        // Hide all content sections
+                        contentSections.forEach(section => {
+                            section.style.display = 'none';
+                        });
+
+                        // Show the course list
+                        courseList.style.display = 'block';
+                    });
+                });
+
+                // Helper function to pad numbers with leading zeros
+                function padZero(num) {
+                    return num < 10 ? '0' + num : num;
+                }
+
+                // AI thinking animation function with lecture note data
+                function startAiThinking(lectureNote) {
+                    const progressFill = document.getElementById('progress-fill');
+                    const aiStatusText = document.getElementById('ai-status-text');
+                    let progress = 0;
+
+                    // Update AI status to show which file is being processed
+                    aiStatusText.textContent = `AI is analyzing "${lectureNote.name}"...`;
+
+                    // Reset progress bar
+                    progressFill.style.width = '0%';
+
+                    // Start progress animation
+                    const progressInterval = setInterval(() => {
+                        progress += 5;
+                        progressFill.style.width = `${progress}%`;
+
+                        // Update text based on progress
+                        if (progress >= 30 && progress < 60) {
+                            aiStatusText.textContent = `AI is extracting key concepts from "${lectureNote.name}"...`;
+                        } else if (progress >= 60 && progress < 90) {
+                            aiStatusText.textContent = `AI is generating quiz from "${lectureNote.name}"...`;
+                        }
+
+                        // When complete, show the quiz
+                        if (progress >= 100) {
+                            clearInterval(progressInterval);
+
+                            // Hide AI thinking and show quiz after a short delay
+                            setTimeout(() => {
+                                // Generate quiz based on the lecture note
+                                const quiz = generateQuizFromLectureNote(lectureNote);
+
+                                // Hide the thinking section
+                                document.getElementById('lecture-notes-content').style.display = 'none';
+
+                                // Show quiz view with the generated quiz
+                                const quizView = document.getElementById('quiz-view');
+                                quizView.style.display = 'block';
+
+                                // Add the quiz content to the quiz view
+                                const quizCard = quizView.querySelector('.quiz-card');
+                                quizCard.innerHTML = `
+                    <div class="quiz-header">
+                        <h2>Quiz: ${lectureNote.name}</h2>
+                        <div class="quiz-timer">
+                            <img src="https://cdn-icons-png.flaticon.com/512/1669/1669667.png" alt="Flower Timer">
+                            <span id="quiz-timer">00:00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="question-container">
+                        ${quiz.questionsHTML}
+                    </div>
+                    
+                    <div class="quiz-navigation">
+                        <a href="#" class="nav-button prev" onclick="prevQuestion()" style="visibility: hidden;">
+                            &lt;&lt;Previous
+                        </a>
+                        <a href="#" class="nav-button next" onclick="nextQuestion()" id="next-btn">
+                            Next&gt;&gt;
+                        </a>
+                    </div>
+                `;
+
+                                // Initialize quiz functionality
+                                setupQuizNavigation();
+                                makeOptionsClickable();
+                                startQuizTimer();
+                            }, 500);
+                        }
+                    }, 100);
+                }
+
+                // Function to generate quiz from lecture note
+                function generateQuizFromLectureNote(lectureNote) {
+                    // In a real app, this would analyze the file content
+                    // For this example, we'll create a sample quiz based on the file name
+
+                    // Sample questions based on file name pattern
+                    let questionsHTML = '';
+                    const fileName = lectureNote.name.toLowerCase();
+
+                    // Generate different types of questions based on the file name keywords
+                    if (fileName.includes('introduction') || fileName.includes('basics')) {
+                        questionsHTML = `
+            <div class="question" data-question-id="1">
+                <h3>Question 1:</h3>
+                <p>What is the main purpose of the introductory concepts covered in "${lectureNote.name}"?</p>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" id="q1a" name="q1" value="a">
+                        <label for="q1a">To provide historical background</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="q1b" name="q1" value="b">
+                        <label for="q1b">To establish foundational knowledge</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="q1c" name="q1" value="c">
+                        <label for="q1c">To compare with advanced topics</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="q1d" name="q1" value="d">
+                        <label for="q1d">To present case studies</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-question-id="2" style="display: none;">
+                <h3>Question 2:</h3>
+                <p>Which concept is most likely discussed first in an introductory lecture?</p>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" id="q2a" name="q2" value="a">
+                        <label for="q2a">Advanced implementation details</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="q2b" name="q2" value="b">
+                        <label for="q2b">Core definitions and terminology</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="q2c" name="q2" value="c">
+                        <label for="q2c">Specialized use cases</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="q2d" name="q2" value="d">
+                        <label for="q2d">Performance optimization</label>
+                    </div>
+                </div>
+            </div>
+        `;
+                    } else if (fileName.includes('machine') || fileName.includes('learning') || fileName.includes('ml')) {
+                        questionsHTML = `
+            <div class="question" data-question-id="1">
+                <h3>Question 1:</h3>
+                <p>Which of the following is a type of machine learning algorithm?</p>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" id="q1a" name="q1" value="a">
+                        <label for="q1a">SQL</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="q1b" name="q1" value="b">
+                        <label for="q1b">Random Forest</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="q1c" name="q1" value="c">
+                        <label for="q1c">JSON</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="q1d" name="q1" value="d">
+                        <label for="q1d">HTML</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-question-id="2" style="display: none;">
+                <h3>Question 2:</h3>
+                <p>What is the primary goal of supervised learning?</p>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" id="q2a" name="q2" value="a">
+                        <label for="q2a">To find patterns in unlabeled data</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="q2b" name="q2" value="b">
+                        <label for="q2b">To predict outputs based on labeled training data</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="q2c" name="q2" value="c">
+                        <label for="q2c">To optimize database queries</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="q2d" name="q2" value="d">
+                        <label for="q2d">To design neural network architecture</label>
+                    </div>
+                </div>
+            </div>
+        `;
+                    } else {
+                        // Default questions for any other type of lecture notes
+                        questionsHTML = `
+            <div class="question" data-question-id="1">
+                <h3>Question 1:</h3>
+                <p>Based on the lecture notes "${lectureNote.name}", which statement is most likely true?</p>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" id="q1a" name="q1" value="a">
+                        <label for="q1a">The topic covers theoretical foundations</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="q1b" name="q1" value="b">
+                        <label for="q1b">The topic focuses on practical applications</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="q1c" name="q1" value="c">
+                        <label for="q1c">The topic explores historical development</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="q1d" name="q1" value="d">
+                        <label for="q1d">The topic analyzes case studies</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="question" data-question-id="2" style="display: none;">
+                <h3>Question 2:</h3>
+                <p>What study approach would be most effective for mastering the content in "${lectureNote.name}"?</p>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" id="q2a" name="q2" value="a">
+                        <label for="q2a">Memorizing key terms and definitions</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="q2b" name="q2" value="b">
+                        <label for="q2b">Working through practice problems</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="q2c" name="q2" value="c">
+                        <label for="q2c">Group discussion and debate</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" id="q2d" name="q2" value="d">
+                        <label for="q2d">Creating visual diagrams and mind maps</label>
+                    </div>
+                </div>
+            </div>
+        `;
+                    }
+
+                    // Return quiz object
+                    return {
+                        questionsHTML: questionsHTML,
+                        questionCount: 2
+                    };
+                }
+
+                // Function to setup quiz navigation
+                function setupQuizNavigation() {
+                    // Get all questions
+                    const questions = document.querySelectorAll('.question');
+                    let currentQuestion = 0;
+
+                    // Create question indicators
+                    const questionContainer = document.querySelector('.question-container');
+                    const indicatorDiv = document.createElement('div');
+                    indicatorDiv.className = 'question-indicator';
+
+                    for (let i = 0; i < questions.length; i++) {
+                        const dot = document.createElement('div');
+                        dot.className = i === 0 ? 'question-dot active' : 'question-dot';
+                        indicatorDiv.appendChild(dot);
+                    }
+
+                    questionContainer.insertBefore(indicatorDiv, questions[0]);
+
+                    // Add control buttons
+                    const quizCard = document.querySelector('.quiz-card');
+                    const controlsDiv = document.createElement('div');
+                    controlsDiv.className = 'quiz-controls';
+                    controlsDiv.innerHTML = `
+        <button class="control-button pause pause-btn" onclick="pauseQuiz()">
+            <i class="fas fa-pause"></i> Pause
+        </button>
+        <button class="control-button stop" onclick="stopQuiz()">
+            <i class="fas fa-stop"></i> Stop
+        </button>
+    `;
+
+                    quizCard.appendChild(controlsDiv);
+
+                    // Initially show only the first question
+                    updateQuestionVisibility();
+
+                    // Navigation functions
+                    function updateQuestionVisibility() {
+                        questions.forEach((question, index) => {
+                            if (index === currentQuestion) {
+                                question.style.display = 'block';
+                            } else {
+                                question.style.display = 'none';
+                            }
+                        });
+
+                        // Update dots
+                        const dots = document.querySelectorAll('.question-dot');
+                        dots.forEach((dot, index) => {
+                            if (index === currentQuestion) {
+                                dot.classList.add('active');
+                            } else {
+                                dot.classList.remove('active');
+                            }
+                        });
+
+                        // Update navigation button visibility
+                        const prevBtn = document.querySelector('.quiz-navigation .prev');
+                        const nextBtn = document.querySelector('.quiz-navigation .next');
+
+                        prevBtn.style.visibility = currentQuestion === 0 ? 'hidden' : 'visible';
+
+                        // If last question, show Finish button instead of Next
+                        if (currentQuestion === questions.length - 1) {
+                            nextBtn.textContent = 'Finish';
+                            nextBtn.classList.add('finish');
+                            nextBtn.onclick = function() {
+                                finishQuiz();
+                            };
+                        } else {
+                            nextBtn.textContent = 'Next >>';
+                            nextBtn.classList.remove('finish');
+                            nextBtn.onclick = function() {
+                                nextQuestion();
+                            };
+                        }
+                    }
+                }
+
+                // Next question function
+                window.nextQuestion = function() {
+                    const questions = document.querySelectorAll('.question');
+                    let currentQuestion = Array.from(questions).findIndex(q => q.style.display !== 'none');
+
+                    if (currentQuestion < questions.length - 1) {
+                        currentQuestion++;
+                        questions.forEach((question, index) => {
+                            question.style.display = index === currentQuestion ? 'block' : 'none';
+                        });
+
+                        // Update dots
+                        const dots = document.querySelectorAll('.question-dot');
+                        dots.forEach((dot, index) => {
+                            dot.classList.toggle('active', index === currentQuestion);
+                        });
+
+                        // Update navigation buttons
+                        const prevBtn = document.querySelector('.quiz-navigation .prev');
+                        const nextBtn = document.querySelector('.quiz-navigation .next');
+
+                        prevBtn.style.visibility = 'visible';
+
+                        if (currentQuestion === questions.length - 1) {
+                            nextBtn.textContent = 'Finish';
+                            nextBtn.classList.add('finish');
+                            nextBtn.onclick = function() {
+                                finishQuiz();
+                            };
+                        }
+                    }
+                };
+
+                // Previous question function
+                window.prevQuestion = function() {
+                    const questions = document.querySelectorAll('.question');
+                    let currentQuestion = Array.from(questions).findIndex(q => q.style.display !== 'none');
+
+                    if (currentQuestion > 0) {
+                        currentQuestion--;
+                        questions.forEach((question, index) => {
+                            question.style.display = index === currentQuestion ? 'block' : 'none';
+                        });
+
+                        // Update dots
+                        const dots = document.querySelectorAll('.question-dot');
+                        dots.forEach((dot, index) => {
+                            dot.classList.toggle('active', index === currentQuestion);
+                        });
+
+                        // Update navigation buttons
+                        const prevBtn = document.querySelector('.quiz-navigation .prev');
+                        const nextBtn = document.querySelector('.quiz-navigation .next');
+
+                        prevBtn.style.visibility = currentQuestion === 0 ? 'hidden' : 'visible';
+
+                        nextBtn.textContent = 'Next >>';
+                        nextBtn.classList.remove('finish');
+                        nextBtn.onclick = function() {
+                            nextQuestion();
+                        };
+                    }
+                };
+
+                // Make options clickable
+                function makeOptionsClickable() {
+                    const options = document.querySelectorAll('.option');
+                    options.forEach(option => {
+                        option.addEventListener('click', function() {
+                            const radio = this.querySelector('input[type="radio"]');
+                            if (radio) {
+                                radio.checked = true;
+
+                                // Remove selected class from siblings
+                                const allOptions = this.closest('.question').querySelectorAll('.option');
+                                allOptions.forEach(opt => opt.classList.remove('selected'));
+
+                                // Add selected class to this option
+                                this.classList.add('selected');
+                            }
+                        });
+                    });
+                }
+
+                // Quiz Timer functionality
+                let quizTimerInterval;
+
+                function startQuizTimer() {
+                    const timerElement = document.getElementById('quiz-timer');
+                    if (!timerElement) return;
+
+                    // Clear any existing timer
+                    if (quizTimerInterval) {
+                        clearInterval(quizTimerInterval);
+                    }
+
+                    // Initialize timer variables
+                    let seconds = 0;
+                    let minutes = 0;
+
+                    // Update timer every second
+                    quizTimerInterval = setInterval(function() {
+                        seconds++;
+                        if (seconds >= 60) {
+                            seconds = 0;
+                            minutes++;
+                        }
+
+                        // Format time as MM:SS
+                        timerElement.textContent = `${padZero(minutes)}:${padZero(seconds)}`;
+
+                        // Store current time in data attributes for pause functionality
+                        timerElement.setAttribute('data-minutes', minutes);
+                        timerElement.setAttribute('data-seconds', seconds);
+                    }, 1000);
+                }
+
+                // Pause/resume quiz timer
+                window.pauseQuiz = function() {
+                    const timerElement = document.getElementById('quiz-timer');
+                    const pauseBtn = document.querySelector('.pause-btn');
+
+                    if (pauseBtn.textContent.includes('Pause')) {
+                        // Pause timer
+                        clearInterval(quizTimerInterval);
+                        pauseBtn.innerHTML = '<i class="fas fa-play"></i> Resume';
+                    } else {
+                        // Resume timer
+                        const minutes = parseInt(timerElement.getAttribute('data-minutes') || 0);
+                        const seconds = parseInt(timerElement.getAttribute('data-seconds') || 0);
+
+                        quizTimerInterval = setInterval(function() {
+                            let newSeconds = seconds + 1;
+                            let newMinutes = minutes;
+
+                            if (newSeconds >= 60) {
+                                newSeconds = 0;
+                                newMinutes++;
+                            }
+
+                            // Update timer display
+                            timerElement.textContent = `${padZero(newMinutes)}:${padZero(newSeconds)}`;
+
+                            // Update data attributes
+                            timerElement.setAttribute('data-minutes', newMinutes);
+                            timerElement.setAttribute('data-seconds', newSeconds);
+                        }, 1000);
+
+                        pauseBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+                    }
+                };
+
+                // Stop quiz with confirmation
+                window.stopQuiz = function() {
+                    if (confirm('Are you sure you want to stop the quiz? Your progress will be lost.')) {
+                        // Stop timer
+                        clearInterval(quizTimerInterval);
+
+                        // Hide quiz view
+                        document.getElementById('quiz-view').style.display = 'none';
+
+                        // Show course list
+                        document.querySelector('.course-list').style.display = 'block';
+                    }
+                };
+
+                // Finish quiz function
+                window.finishQuiz = function() {
+                    // Stop timer
+                    clearInterval(quizTimerInterval);
+
+                    // Get the time elapsed
+                    const timerElement = document.getElementById('quiz-timer');
+                    const timeText = timerElement.textContent;
+
+                    // Calculate quiz score
+                    let correctAnswers = 8;
+                    let wrongAnswers = 2;
+
+                    // Hide quiz view
+                    document.getElementById('quiz-view').style.display = 'none';
+
+                    // Create scoreboard element if it doesn't exist
+                    if (!document.getElementById('scoreboard-view')) {
+                        const scoreboardHTML = `
+            <div id="scoreboard-view" class="scoreboard-container">
+                <div id="balloons-container"></div>
+                <div class="scoreboard-card">
+                    <div class="scoreboard-header">
+                        <h1 class="scoreboard-title">Score Board</h1>
+                        <div class="trophy-section">
+                            <img src="6.png" alt="Trophy" class="trophy-image">
+                            <div class="flower">
+                                <div class="flower-center">Gold<br>Badge</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="congratulations-section">
+                        <h2 class="congratulations">Congratulations!</h2>
+                        <p class="score-text">You've scored <span class="points">+80 points</span></p>
+                        <p class="time-text">In 6 minutes 15 seconds</p>
+                    </div>
+                    
+                    <div class="confetti-section">
+                        <img src="8.png" alt="Confetti" class="confetti-image">
+                    </div>
+                    
+                    <div class="score-details">
+                        <div class="detail-column">
+                            <p class="detail-text">08 Correct Answers</p>
+                        </div>
+                        <div class="detail-column border-sides">
+                            <p class="detail-text">08 Correct Answers</p>
+                            <p class="detail-text">02 Wrong Answers</p>
+                        </div>
+                        <div class="detail-column">
+                            <div class="share-button">
+                                <img src="9.png" alt="Share" class="share-icon">
+                                <span>Share</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="action-btn try-again" onclick="restartQuiz()">Try Again</button>
+                    <button class="action-btn save" onclick="saveQuizResults()">Save</button>
+                </div>
+            </div>
+        `;
+
+                        // Append scoreboard to main content
+                        document.querySelector('.content-area').insertAdjacentHTML('beforeend', scoreboardHTML);
+
+                        // Start balloon animation
+                        createBalloons();
+                    } else {
+                        // If scoreboard already exists, just show it
+                        document.getElementById('scoreboard-view').style.display = 'block';
+                        // Recreate balloons
+                        createBalloons();
+                    }
+
+                    // Hide course list
+                    document.querySelector('.course-list').style.display = 'none';
+                };
+
+                // Enhanced Celebration effects - combined function
+                function startCelebration() {
+                    createConfetti();
+                    createBalloons();
+                    animateTrophy();
+                    createFireworks();
+                    createSparkles();
+                    createFallingStars();
+                    createCelebrationText();
+                    pulseBackground();
+                }
+
+                // Confetti creation function
+                function createConfetti() {
+                    const confettiCount = 200;
+                    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+
+                    const confettiContainer = document.createElement('div');
+                    confettiContainer.style.position = 'fixed';
+                    confettiContainer.style.top = '0';
+                    confettiContainer.style.left = '0';
+                    confettiContainer.style.width = '100%';
+                    confettiContainer.style.height = '100%';
+                    confettiContainer.style.pointerEvents = 'none';
+                    confettiContainer.style.zIndex = '9999';
+                    document.body.appendChild(confettiContainer);
+
+                    // Create confetti in waves for a longer-lasting effect
+                    createConfettiWave(0);
+                    createConfettiWave(1000);
+                    createConfettiWave(2000);
+
+                    function createConfettiWave(delay) {
+                        setTimeout(() => {
+                            for (let i = 0; i < confettiCount / 3; i++) {
+                                const confetti = document.createElement('div');
+                                const size = Math.random() * 10 + 5;
+
+                                confetti.style.position = 'absolute';
+                                confetti.style.width = `${size}px`;
+                                confetti.style.height = `${size}px`;
+                                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                                confetti.style.borderRadius = '50%';
+                                confetti.style.top = '-50px';
+                                confetti.style.left = `${Math.random() * 100}%`;
+                                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+                                // Add some star and balloon shapes
+                                if (i % 5 === 0) {
+                                    confetti.style.clipPath = 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
+                                } else if (i % 7 === 0) {
+                                    confetti.style.borderRadius = '0';
+                                    confetti.style.width = `${size * 1.5}px`;
+                                    confetti.style.height = `${size * 2}px`;
+                                    confetti.style.borderRadius = '50% 50% 20% 20%';
+                                }
+
+                                confettiContainer.appendChild(confetti);
+
+                                // Animation - much slower now
+                                const duration = Math.random() * 5 + 4; // 4-9 seconds
+                                const leftMovement = (Math.random() - 0.5) * 15; // Less horizontal movement
+
+                                confetti.animate([{
+                                    top: '-50px',
+                                    transform: `rotate(0deg) translateX(0)`
+                                }, {
+                                    top: '40%',
+                                    transform: `rotate(${180 + Math.random() * 90}deg) translateX(${leftMovement/2}vw)`
+                                }, {
+                                    top: '105%',
+                                    transform: `rotate(${360 + Math.random() * 360}deg) translateX(${leftMovement}vw)`
+                                }], {
+                                    duration: duration * 1000,
+                                    easing: 'cubic-bezier(0.1, 0.9, 0.2, 1)',
+                                    fill: 'forwards'
+                                });
+
+                                // Remove confetti elements after animation
+                                setTimeout(() => {
+                                    confetti.remove();
+                                }, duration * 1000);
+                            }
+                        }, delay);
+                    }
+
+                    // Remove the container after all animations complete
+                    setTimeout(() => {
+                        confettiContainer.remove();
+                    }, 12000); // Extended from 5s to 12s
+                }
+
+                // Trophy animation function
+                function animateTrophy() {
+                    const trophy = document.querySelector('.trophy-image');
+                    if (!trophy) return;
+
+                    // Apply initial animation
+                    trophy.style.transition = 'transform 0.8s ease-in-out'; // Slowed down
+                    trophy.style.transformOrigin = 'bottom center';
+
+                    // Create a sequence of animations with longer delays
+                    setTimeout(() => {
+                        trophy.style.transform = 'scale(1.2) translateY(-20px)';
+                    }, 500);
+                    setTimeout(() => {
+                        trophy.style.transform = 'scale(1.1) translateY(0)';
+                    }, 1300);
+                    setTimeout(() => {
+                        trophy.style.transform = 'scale(1.15) translateY(-10px)';
+                    }, 2100);
+                    setTimeout(() => {
+                        trophy.style.transform = 'scale(1) translateY(0)';
+                    }, 2900);
+                }
+
+                // Balloon creation function - combined from both implementations
+                function createBalloons() {
+                    // Create balloon container if it doesn't exist
+                    let balloonsContainer = document.getElementById('balloons-container');
+                    if (!balloonsContainer) {
+                        balloonsContainer = document.createElement('div');
+                        balloonsContainer.id = 'balloons-container';
+                        balloonsContainer.style.position = 'fixed';
+                        balloonsContainer.style.bottom = '0';
+                        balloonsContainer.style.left = '0';
+                        balloonsContainer.style.width = '100%';
+                        balloonsContainer.style.height = '100%';
+                        balloonsContainer.style.pointerEvents = 'none';
+                        balloonsContainer.style.zIndex = '9998';
+                        document.body.appendChild(balloonsContainer);
+                    }
+
+                    // Clear any existing balloons
+                    balloonsContainer.innerHTML = '';
+
+                    // Combined and expanded color palette
+                    const balloonColors = [
+                        '#ff6b6b', '#48dbfb', '#1dd1a1', '#feca57', '#ff9ff3', '#54a0ff',
+                        '#ff0000', '#ff7f00', '#ffff00', '#00ff00', '#0000ff', '#4b0082', '#9400d3', '#ff1493', '#00ffff'
+                    ];
+
+                    // Create a total of 50 balloons with staggered timing
+                    for (let i = 0; i < 50; i++) {
+                        setTimeout(() => {
+                            const balloon = document.createElement('div');
+                            balloon.className = 'balloon';
+
+                            // Random properties
+                            const colorIndex = Math.floor(Math.random() * balloonColors.length);
+                            const size = 30 + Math.random() * 40;
+                            const left = Math.random() * 100;
+                            const delay = Math.random() * 2;
+                            const duration = 5 + Math.random() * 10;
+
+                            // Set balloon style
+                            balloon.style.backgroundColor = balloonColors[colorIndex];
+                            balloon.style.width = `${size}px`;
+                            balloon.style.height = `${size * 1.2}px`;
+                            balloon.style.left = `${left}%`;
+                            balloon.style.position = 'absolute';
+                            balloon.style.bottom = '-100px';
+                            balloon.style.borderRadius = '50% 50% 50% 50% / 40% 40% 60% 60%';
+
+                            // Add string to balloon
+                            const string = document.createElement('div');
+                            string.style.position = 'absolute';
+                            string.style.width = '1px';
+                            string.style.height = '100px';
+                            string.style.backgroundColor = '#ffffff';
+                            string.style.bottom = '-100px';
+                            string.style.left = '50%';
+                            string.style.transformOrigin = 'top';
+                            balloon.appendChild(string);
+
+                            // Animation
+                            balloon.style.animation = `float ${duration}s ease-out ${delay}s forwards`;
+
+                            // Add wobble to some balloons
+                            if (Math.random() > 0.5) {
+                                balloon.style.animation = `float ${duration}s ease-out ${delay}s forwards, wobble 2s ease-in-out infinite`;
+                            }
+
+                            // Add to container
+                            balloonsContainer.appendChild(balloon);
+
+                            // Remove after animation completes
+                            setTimeout(() => {
+                                balloon.remove();
+                            }, (duration + delay) * 1000);
+                        }, i * 100); // Stagger balloon creation
+                    }
+
+                    // Also create balloons for the score-board if it exists (from the second implementation)
+                    const scoreBoard = document.querySelector('.score-board');
+                    if (scoreBoard) {
+                        let balloonCount = 0;
+
+                        function createScoreBoardBalloon() {
+                            if (balloonCount >= 15) return; // Limit to 15 balloons
+
+                            const balloon = document.createElement('div');
+                            balloon.className = 'balloon';
+                            balloon.style.backgroundColor = balloonColors[Math.floor(Math.random() * balloonColors.length)];
+                            balloon.style.left = `${10 + Math.random() * 80}%`; // 10-90% from left
+                            balloon.style.animationDelay = `${Math.random() * 2}s`;
+                            balloon.style.animationDuration = `${8 + Math.random() * 7}s`; // 8-15 seconds
+
+                            scoreBoard.appendChild(balloon);
+                            balloonCount++;
+
+                            // Remove balloon after animation completes
+                            setTimeout(() => {
+                                balloon.remove();
+                                balloonCount--;
+                            }, parseFloat(balloon.style.animationDuration) * 1000);
+                        }
+
+                        // Create balloons at staggered intervals
+                        for (let i = 0; i < 5; i++) {
+                            setTimeout(createScoreBoardBalloon, i * 1500);
+                        }
+
+                        // Create more balloons randomly
+                        const balloonInterval = setInterval(() => {
+                            if (balloonCount < 15 && Math.random() > 0.5) {
+                                createScoreBoardBalloon();
+                            }
+                        }, 2000);
+
+                        // Stop creating balloons after 20 seconds
+                        setTimeout(() => {
+                            clearInterval(balloonInterval);
+                        }, 20000);
+                    }
+                }
+
+                // Fireworks animation function
+                function createFireworks() {
+                    const fireworksContainer = document.createElement('div');
+                    fireworksContainer.style.position = 'fixed';
+                    fireworksContainer.style.top = '0';
+                    fireworksContainer.style.left = '0';
+                    fireworksContainer.style.width = '100%';
+                    fireworksContainer.style.height = '100%';
+                    fireworksContainer.style.pointerEvents = 'none';
+                    fireworksContainer.style.zIndex = '9997';
+                    document.body.appendChild(fireworksContainer);
+
+                    // Create multiple fireworks with different timings
+                    for (let i = 0; i < 10; i++) {
+                        setTimeout(() => {
+                            launchFirework();
+                        }, i * 800);
+                    }
+
+                    function launchFirework() {
+                        // Create the firework launcher (the trail going up)
+                        const launcher = document.createElement('div');
+                        launcher.className = 'firework-launcher';
+
+                        // Random position on screen
+                        const left = 10 + Math.random() * 80;
+                        launcher.style.left = `${left}%`;
+                        launcher.style.bottom = '0';
+
+                        fireworksContainer.appendChild(launcher);
+
+                        // After the launch animation, create the explosion
+                        setTimeout(() => {
+                            launcher.remove();
+                            createExplosion(left);
+                        }, 1000);
+                    }
+
+                    function createExplosion(left) {
+                        const explosion = document.createElement('div');
+                        explosion.className = 'firework-explosion';
+
+                        // Position where the launcher ended
+                        explosion.style.left = `${left}%`;
+                        explosion.style.top = `${20 + Math.random() * 40}%`;
+
+                        fireworksContainer.appendChild(explosion);
+
+                        // Create particles
+                        const particleCount = 40 + Math.floor(Math.random() * 40);
+                        const color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+
+                        for (let i = 0; i < particleCount; i++) {
+                            const particle = document.createElement('div');
+                            particle.className = 'firework-particle';
+                            particle.style.backgroundColor = color;
+
+                            // Calculate the angle and distance
+                            const angle = Math.random() * Math.PI * 2;
+                            const distance = 20 + Math.random() * 80;
+                            const duration = 0.5 + Math.random() * 1;
+
+                            // Set the animation
+                            particle.style.transform = `translate(-50%, -50%)`;
+                            particle.animate([{
+                                transform: 'translate(-50%, -50%) scale(1)',
+                                opacity: 1
+                            }, {
+                                transform: `translate(
+                        calc(-50% + ${Math.cos(angle) * distance}px), 
+                        calc(-50% + ${Math.sin(angle) * distance}px)
+                    ) scale(0.1)`,
+                                opacity: 0
+                            }], {
+                                duration: duration * 1000,
+                                easing: 'cubic-bezier(0.1, 0.9, 0.2, 1)',
+                                fill: 'forwards'
+                            });
+
+                            explosion.appendChild(particle);
+                        }
+
+                        // Remove explosion after all particles are done
+                        setTimeout(() => {
+                            explosion.remove();
+                        }, 2000);
+                    }
+
+                    // Remove container after all fireworks are done
+                    setTimeout(() => {
+                        fireworksContainer.remove();
+                    }, 15000);
+                }
+
+                // Sparkles animation function
+                function createSparkles() {
+                    const sparklesContainer = document.createElement('div');
+                    sparklesContainer.style.position = 'fixed';
+                    sparklesContainer.style.top = '0';
+                    sparklesContainer.style.left = '0';
+                    sparklesContainer.style.width = '100%';
+                    sparklesContainer.style.height = '100%';
+                    sparklesContainer.style.pointerEvents = 'none';
+                    sparklesContainer.style.zIndex = '9996';
+                    document.body.appendChild(sparklesContainer);
+
+                    // Create sparkles at intervals
+                    for (let i = 0; i < 100; i++) {
+                        setTimeout(() => {
+                            const sparkle = document.createElement('div');
+                            sparkle.className = 'sparkle';
+
+                            // Random position
+                            sparkle.style.left = `${Math.random() * 100}%`;
+                            sparkle.style.top = `${Math.random() * 100}%`;
+                            sparkle.style.transform = 'translate(-50%, -50%)';
+
+                            // Random size
+                            const size = 3 + Math.random() * 12;
+                            sparkle.style.width = `${size}px`;
+                            sparkle.style.height = `${size}px`;
+
+                            // Random color
+                            sparkle.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 75%)`;
+
+                            // Animation
+                            const duration = 0.5 + Math.random() * 1.5;
+                            sparkle.animate([{
+                                opacity: 0,
+                                transform: 'translate(-50%, -50%) scale(0)'
+                            }, {
+                                opacity: 1,
+                                transform: 'translate(-50%, -50%) scale(1)'
+                            }, {
+                                opacity: 0,
+                                transform: 'translate(-50%, -50%) scale(0)'
+                            }], {
+                                duration: duration * 1000,
+                                easing: 'ease-in-out',
+                                fill: 'forwards'
+                            });
+
+                            sparklesContainer.appendChild(sparkle);
+
+                            // Remove after animation
+                            setTimeout(() => {
+                                sparkle.remove();
+                            }, duration * 1000);
+                        }, i * 100 + Math.random() * 3000);
+                    }
+
+                    // Remove container after all sparkles are done
+                    setTimeout(() => {
+                        sparklesContainer.remove();
+                    }, 15000);
+                }
+
+                // Falling stars animation function
+                function createFallingStars() {
+                    const starsContainer = document.createElement('div');
+                    starsContainer.style.position = 'fixed';
+                    starsContainer.style.top = '0';
+                    starsContainer.style.left = '0';
+                    starsContainer.style.width = '100%';
+                    starsContainer.style.height = '100%';
+                    starsContainer.style.pointerEvents = 'none';
+                    starsContainer.style.zIndex = '9995';
+                    document.body.appendChild(starsContainer);
+
+                    // Create multiple falling stars
+                    for (let i = 0; i < 15; i++) {
+                        setTimeout(() => {
+                            const star = document.createElement('div');
+                            star.className = 'falling-star';
+
+                            // Start position - top of screen, random horizontal position
+                            const startX = Math.random() * 100;
+                            const endX = startX - 20 - Math.random() * 30;
+
+                            star.style.left = `${startX}%`;
+                            star.style.top = '-50px';
+
+                            // Create the trail
+                            const trail = document.createElement('div');
+                            trail.className = 'star-trail';
+                            star.appendChild(trail);
+
+                            // Animation duration
+                            const duration = 1 + Math.random() * 2;
+
+                            // Animate
+                            star.animate([{
+                                left: `${startX}%`,
+                                top: '-50px',
+                                opacity: 1
+                            }, {
+                                left: `${endX}%`,
+                                top: '110%',
+                                opacity: 0
+                            }], {
+                                duration: duration * 1000,
+                                easing: 'cubic-bezier(0.1, 0.9, 0.2, 1)',
+                                fill: 'forwards'
+                            });
+
+                            starsContainer.appendChild(star);
+
+                            // Remove after animation
+                            setTimeout(() => {
+                                star.remove();
+                            }, duration * 1000);
+                        }, i * 500 + Math.random() * 3000);
+                    }
+
+                    // Remove container after all stars are done
+                    setTimeout(() => {
+                        starsContainer.remove();
+                    }, 15000);
+                }
+
+                // Celebration text function
+                function createCelebrationText() {
+                    const phrases = [
+                        "Congratulations!",
+                        "Well Done!",
+                        "Amazing!",
+                        "Awesome!",
+                        "Fantastic!",
+                        "Great Job!",
+                        "Wow!",
+                        "Bravo!",
+                        "Outstanding!"
+                    ];
+
+                    const textContainer = document.createElement('div');
+                    textContainer.style.position = 'fixed';
+                    textContainer.style.top = '0';
+                    textContainer.style.left = '0';
+                    textContainer.style.width = '100%';
+                    textContainer.style.height = '100%';
+                    textContainer.style.display = 'flex';
+                    textContainer.style.justifyContent = 'center';
+                    textContainer.style.alignItems = 'center';
+                    textContainer.style.pointerEvents = 'none';
+                    textContainer.style.zIndex = '9994';
+                    document.body.appendChild(textContainer);
+
+                    // Create multiple text elements with different timings
+                    for (let i = 0; i < 5; i++) {
+                        setTimeout(() => {
+                            const text = document.createElement('div');
+                            text.className = 'celebration-text';
+
+                            // Random phrase
+                            text.textContent = phrases[Math.floor(Math.random() * phrases.length)];
+
+                            // Random position within center area
+                            const offsetX = (Math.random() - 0.5) * 60;
+                            const offsetY = (Math.random() - 0.5) * 60;
+
+                            text.style.position = 'absolute';
+                            text.style.fontFamily = "'Arial', sans-serif";
+                            text.style.fontWeight = 'bold';
+                            text.style.fontSize = '0px'; // Start with zero size
+                            text.style.textAlign = 'center';
+                            text.style.color = `hsl(${Math.random() * 360}, 80%, 60%)`;
+                            text.style.textShadow = '0 0 10px rgba(255, 255, 255, 0.7)';
+                            text.style.transform = `translate(-50%, -50%) translate(${offsetX}vw, ${offsetY}vh)`;
+
+                            // Animation
+                            text.animate([{
+                                fontSize: '0px',
+                                opacity: 0
+                            }, {
+                                fontSize: '60px',
+                                opacity: 1
+                            }, {
+                                fontSize: '60px',
+                                opacity: 1
+                            }, {
+                                fontSize: '80px',
+                                opacity: 0
+                            }], {
+                                duration: 2000,
+                                easing: 'cubic-bezier(0.1, 0.9, 0.2, 1)',
+                                fill: 'forwards'
+                            });
+
+                            textContainer.appendChild(text);
+
+                            // Remove after animation
+                            setTimeout(() => {
+                                text.remove();
+                            }, 2000);
+                        }, i * 1000);
+                    }
+
+                    // Remove container after all text animations are done
+                    setTimeout(() => {
+                        textContainer.remove();
+                    }, 10000);
+                }
+
+                // Pulsing background function
+                function pulseBackground() {
+                    // Create a pulsing overlay
+                    const overlay = document.createElement('div');
+                    overlay.style.position = 'fixed';
+                    overlay.style.top = '0';
+                    overlay.style.left = '0';
+                    overlay.style.width = '100%';
+                    overlay.style.height = '100%';
+                    overlay.style.pointerEvents = 'none';
+                    overlay.style.zIndex = '9990'; // Behind all other effects
+                    overlay.style.backgroundColor = 'rgba(255, 255, 255, 0)';
+                    overlay.style.transition = 'background-color 0.5s ease-in-out';
+                    document.body.appendChild(overlay);
+
+                    // Create pulsing effect
+                    let pulseCount = 0;
+                    const colors = [
+                        'rgba(255, 255, 255, 0.1)',
+                        'rgba(255, 215, 0, 0.1)',
+                        'rgba(255, 105, 180, 0.1)',
+                        'rgba(30, 144, 255, 0.1)',
+                        'rgba(50, 205, 50, 0.1)'
+                    ];
+
+                    function pulse() {
+                        if (pulseCount >= 10) {
+                            overlay.remove();
+                            return;
+                        }
+
+                        overlay.style.backgroundColor = colors[pulseCount % colors.length];
+
+                        setTimeout(() => {
+                            overlay.style.backgroundColor = 'rgba(255, 255, 255, 0)';
+                            pulseCount++;
+
+                            setTimeout(pulse, 800);
+                        }, 700);
+                    }
+
+                    // Start pulsing
+                    pulse();
+                }
+
+                // Function to add required CSS for animations
+                function addAnimationStyles() {
+                    // Check if styles already exist
+                    if (document.getElementById('celebration-styles')) return;
+
+                    const styleSheet = document.createElement('style');
+                    styleSheet.id = 'celebration-styles';
+                    styleSheet.textContent = `
+        @keyframes float {
+            0% { transform: translateY(0); bottom: -100px; }
+            100% { transform: translateY(-110vh); bottom: 0; }
+        }
+        
+        @keyframes wobble {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(20px); }
+        }
+        
+        .balloon {
+            position: absolute;
+            bottom: -100px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            box-shadow: inset -10px -10px 10px rgba(0,0,0,0.1);
+            transform-origin: bottom center;
+            animation: float 8s ease-out forwards;
+        }
+        
+        .balloon:before {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 20px;
+            background: inherit;
+            border-radius: 0 0 20% 20%;
+        }
+        
+        .firework-launcher {
+            position: absolute;
+            width: 3px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: launch 1s ease-out forwards;
+        }
+        
+        @keyframes launch {
+            0% { height: 10px; bottom: 0; opacity: 1; }
+            80% { height: 10px; bottom: 80%; opacity: 1; }
+            100% { height: 10px; bottom: 80%; opacity: 0; }
+        }
+        
+        .firework-explosion {
+            position: absolute;
+            width: 0;
+            height: 0;
+        }
+        
+        .firework-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+        }
+        
+        .sparkle {
+            position: absolute;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px currentColor;
+        }
+        
+        .falling-star {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px white;
+        }
+        
+        .star-trail {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to left, rgba(255, 255, 255, 0.8), transparent);
+            transform: translateY(-50%) translateX(-100%);
+        }
+    `;
+
+                    document.head.appendChild(styleSheet);
+                }
+
+                // Call this function to initialize animations
+                addAnimationStyles();
+
+                // Call this function to start all celebration effects
+                // startCelebration();
+                // Restart quiz function
+                window.restartQuiz = function() {
+                    // Hide scoreboard
+                    document.getElementById('scoreboard-view').style.display = 'none';
+
+                    // Show the selected content section (lecture notes)
+                    document.getElementById('lecture-notes-content').style.display = 'block';
+
+                    // Start AI thinking again with a sample lecture note
+                    const lectureNote = {
+                        name: "Introduction To ML.pdf",
+                        size: "1.2 MB",
+                        date: "2025-03-12"
+                    };
+
+                    startAiThinking(lectureNote);
+                };
+
+                // Save quiz results function
+                window.saveQuizResults = function() {
+                    // Get quiz data to save
+                    const timeText = document.querySelector('.time-text').textContent;
+                    const timeElapsed = timeText.replace('In ', '');
+                    const pointsText = document.querySelector('.points').textContent;
+                    const points = parseInt(pointsText.replace('+', '').replace(' points', ''));
+                    const correctAnswers = 8; // Currently hardcoded, would be dynamic in a real app
+                    const wrongAnswers = 2; // Currently hardcoded, would be dynamic in a real app
+
+                    // Get lecture note name
+                    const quizTitle = document.querySelector('.quiz-header h2').textContent;
+                    const lectureName = quizTitle.replace('Quiz: ', '');
+
+                    // Create a record to save
+                    const quizResult = {
+                        id: Date.now(), // Unique ID based on timestamp
+                        name: `Quiz Result: ${lectureName}`,
+                        date: new Date().toISOString(),
+                        lectureFile: lectureName,
+                        timeElapsed: timeElapsed,
+                        points: points,
+                        correctAnswers: correctAnswers,
+                        wrongAnswers: wrongAnswers,
+                        badge: 'Gold Badge',
+                        type: 'quiz-result' // Add a type identifier
+                    };
+
+                    // Get existing quiz results from localStorage
+                    let quizResults = JSON.parse(localStorage.getItem('quiz-results')) || [];
+
+                    // Add new result
+                    quizResults.push(quizResult);
+
+                    // Save back to localStorage
+                    localStorage.setItem('quiz-results', JSON.stringify(quizResults));
+
+                    // Show success message
+                    alert('Quiz results saved successfully to your library!');
+
+                    // Hide scoreboard
+                    document.getElementById('scoreboard-view').style.display = 'none';
+
+                    // Show course list
+                    document.querySelector('.course-list').style.display = 'block';
+                };
+
+                // Function to display quiz results
+                function displayQuizResults() {
+                    // Check if the quiz results section exists
+                    let quizResultsSection = document.getElementById('quiz-results-grid');
+
+                    // If it doesn't exist, create it
+                    if (!quizResultsSection) {
+                        const uploadedFilesContainer = document.getElementById('uploaded-files-container');
+
+                        // Create quiz results section
+                        const quizResultsHTML = `
+            <div style="margin-bottom: 20px;">
+                <h3 style="font-size: 16px; color: #555; margin-bottom: 10px; display: flex; align-items: center;">
+                    <i class="fas fa-trophy" style="margin-right: 8px; color: #2e5bff;"></i> Quiz Results
+                </h3>
+                // ... continuing from previous code
+
+                <div id="quiz-results-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); grid-gap: 15px;">
+                    <!-- Quiz result cards will be loaded here dynamically -->
+                </div>
+            </div>
+        `;
+
+                        // Add the quiz results section after uploaded files container
+                        if (uploadedFilesContainer) {
+                            uploadedFilesContainer.insertAdjacentHTML('afterend', quizResultsHTML);
+                        }
+                    }
+
+                    // Get quiz results from localStorage
+                    const quizResults = JSON.parse(localStorage.getItem('quiz-results')) || [];
+
+                    // Get the container and clear current content
+                    quizResultsSection = document.getElementById('quiz-results-grid');
+                    quizResultsSection.innerHTML = '';
+
+                    // If no quiz results, show a message
+                    if (quizResults.length === 0) {
+                        quizResultsSection.innerHTML = `
+            <div class="no-results" style="grid-column: 1 / -1; text-align: center; padding: 20px; color: #888;">
+                <p>Complete quizzes to see your results here.</p>
+            </div>
+        `;
+                        return;
+                    }
+
+                    // Add each quiz result as a card
+                    quizResults.forEach(result => {
+                        // Format date
+                        const resultDate = new Date(result.date);
+                        const formattedDate = `${resultDate.getFullYear()}-${padZero(resultDate.getMonth() + 1)}-${padZero(resultDate.getDate())}`;
+
+                        // Create card element
+                        const card = document.createElement('div');
+                        card.className = 'file-card quiz-result-card';
+                        card.innerHTML = `
+            <div class="file-icon">
+                <i class="fas fa-award" style="color: gold;"></i>
+            </div>
+            <div class="file-info">
+                <div class="file-name">${result.name}</div>
+                <div class="file-details">
+                    <span class="file-date">${formattedDate}</span>
+                    <span class="file-badge">${result.badge}</span>
+                </div>
+                <div class="score-details">
+                    <span class="score-points">+${result.points} points</span>
+                    <span class="score-answers">${result.correctAnswers} correct / ${result.wrongAnswers} wrong</span>
+                </div>
+            </div>
+            <div class="file-actions">
+                <button class="view-result-btn" data-result-id="${result.id}">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button class="delete-result-btn" data-result-id="${result.id}">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `;
+
+                        // Add to grid
+                        quizResultsSection.appendChild(card);
+
+                        // Add event listeners for view and delete buttons
+                        card.querySelector('.view-result-btn').addEventListener('click', function() {
+                            viewQuizResult(result.id);
+                        });
+
+                        card.querySelector('.delete-result-btn').addEventListener('click', function() {
+                            deleteQuizResult(result.id);
+                        });
+                    });
+                }
+
+                // Function to view a specific quiz result
+                function viewQuizResult(resultId) {
+                    // Get quiz results from localStorage
+                    const quizResults = JSON.parse(localStorage.getItem('quiz-results')) || [];
+
+                    // Find the specific result
+                    const result = quizResults.find(r => r.id === resultId);
+
+                    if (!result) {
+                        alert('Quiz result not found!');
+                        return;
+                    }
+
+                    // Hide all content sections
+                    const contentSections = document.querySelectorAll('.dynamic-content');
+                    contentSections.forEach(section => {
+                        section.style.display = 'none';
+                    });
+
+                    // Show the selected content section (scoreboard)
+                    const scoreboardView = document.getElementById('scoreboard-view');
+
+                    // If scoreboard doesn't exist, create it
+                    if (!scoreboardView) {
+                        const scoreboardHTML = `
+            <div id="scoreboard-view" class="scoreboard-container">
+                <div id="balloons-container"></div>
+                <div class="scoreboard-card">
+                    <div class="scoreboard-header">
+                        <h1 class="scoreboard-title">Score Board</h1>
+                        <div class="trophy-section">
+                            <img src="6.png" alt="Trophy" class="trophy-image">
+                            <div class="flower">
+                                <div class="flower-center">${result.badge}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="congratulations-section">
+                        <h2 class="congratulations">Congratulations!</h2>
+                        <p class="score-text">You've scored <span class="points">+${result.points} points</span></p>
+                        <p class="time-text">In ${result.timeElapsed}</p>
+                    </div>
+                    
+                    <div class="confetti-section">
+                        <img src="8.png" alt="Confetti" class="confetti-image">
+                    </div>
+                    
+                    <div class="score-details">
+                        <div class="detail-column">
+                            <p class="detail-text">${result.correctAnswers} Correct Answers</p>
+                        </div>
+                        <div class="detail-column border-sides">
+                            <p class="detail-text">${result.correctAnswers} Correct Answers</p>
+                            <p class="detail-text">${result.wrongAnswers} Wrong Answers</p>
+                        </div>
+                        <div class="detail-column">
+                            <div class="share-button">
+                                <img src="9.png" alt="Share" class="share-icon">
+                                <span>Share</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="action-btn back" onclick="backToLibrary()">Back to Library</button>
+                </div>
+            </div>
+        `;
+
+                        // Append scoreboard to main content
+                        document.querySelector('.content-area').insertAdjacentHTML('beforeend', scoreboardHTML);
+                    } else {
+                        // Update existing scoreboard with result data
+                        scoreboardView.querySelector('.flower-center').textContent = result.badge;
+                        scoreboardView.querySelector('.points').textContent = `+${result.points} points`;
+                        scoreboardView.querySelector('.time-text').textContent = `In ${result.timeElapsed}`;
+
+                        const detailColumns = scoreboardView.querySelectorAll('.detail-column');
+                        detailColumns[0].querySelector('.detail-text').textContent = `${result.correctAnswers} Correct Answers`;
+                        const borderColumn = detailColumns[1].querySelectorAll('.detail-text');
+                        borderColumn[0].textContent = `${result.correctAnswers} Correct Answers`;
+                        borderColumn[1].textContent = `${result.wrongAnswers} Wrong Answers`;
+
+                        // Show the scoreboard
+                        scoreboardView.style.display = 'block';
+                    }
+
+                    // Start balloon animation
+                    createBalloons();
+                }
+
+                // Function to delete a quiz result
+                function deleteQuizResult(resultId) {
+                    if (confirm('Are you sure you want to delete this quiz result?')) {
+                        // Get quiz results from localStorage
+                        let quizResults = JSON.parse(localStorage.getItem('quiz-results')) || [];
+
+                        // Filter out the result to delete
+                        quizResults = quizResults.filter(r => r.id !== resultId);
+
+                        // Save back to localStorage
+                        localStorage.setItem('quiz-results', JSON.stringify(quizResults));
+
+                        // Refresh the display
+                        displayQuizResults();
+                    }
+                }
+
+                // Function to go back to library from scoreboard
+                window.backToLibrary = function() {
+                    // Hide scoreboard
+                    document.getElementById('scoreboard-view').style.display = 'none';
+
+                    // Show course list
+                    document.querySelector('.course-list').style.display = 'block';
+                };
+
+                // Initialize file upload functionality
+                function initializeFileUpload() {
+                    const fileInput = document.getElementById('file-input');
+                    const uploadButton = document.getElementById('upload-button');
+                    const uploadedFilesContainer = document.getElementById('uploaded-files-container');
+
+                    // Check if elements exist
+                    if (!fileInput || !uploadButton || !uploadedFilesContainer) return;
+
+                    // Load uploaded files from localStorage
+                    loadUploadedFiles();
+
+                    // Add click event to upload button
+                    uploadButton.addEventListener('click', function() {
+                        fileInput.click();
+                    });
+
+                    // Listen for file selection
+                    fileInput.addEventListener('change', function(e) {
+                        const files = e.target.files;
+
+                        if (files.length > 0) {
+                            // Process each file
+                            for (let i = 0; i < files.length; i++) {
+                                const file = files[i];
+
+                                // Create file object
+                                const fileObj = {
+                                    id: Date.now() + i,
+                                    name: file.name,
+                                    size: formatFileSize(file.size),
+                                    date: new Date().toISOString(),
+                                    type: getFileType(file.name)
+                                };
+
+                                // Save to localStorage
+                                saveFileToLocalStorage(fileObj);
+
+                                // Add to UI
+                                addFileCard(fileObj);
+                            }
+
+                            // Clear file input
+                            fileInput.value = '';
+                        }
+                    });
+
+                    // Display quiz results
+                    displayQuizResults();
+                }
+
+                // Load uploaded files from localStorage
+                function loadUploadedFiles() {
+                    const uploadedFilesContainer = document.getElementById('uploaded-files-container');
+                    if (!uploadedFilesContainer) return;
+
+                    // Clear container
+                    uploadedFilesContainer.innerHTML = '';
+
+                    // Get files from localStorage
+                    const files = JSON.parse(localStorage.getItem('lecture-notes')) || [];
+
+                    // Display no files message if empty
+                    if (files.length === 0) {
+                        uploadedFilesContainer.innerHTML = `
+            <div class="no-files">
+                <p>No lecture notes uploaded yet.</p>
+            </div>
+        `;
+                        return;
+                    }
+
+                    // Add each file to the container
+                    files.forEach(file => {
+                        addFileCard(file);
+                    });
+                }
+
+                // Add file card to UI
+                function addFileCard(fileObj) {
+                    const uploadedFilesContainer = document.getElementById('uploaded-files-container');
+                    if (!uploadedFilesContainer) return;
+
+                    // Remove no files message if present
+                    const noFilesMessage = uploadedFilesContainer.querySelector('.no-files');
+                    if (noFilesMessage) {
+                        noFilesMessage.remove();
+                    }
+
+                    // Format date
+                    const fileDate = new Date(fileObj.date);
+                    const formattedDate = `${fileDate.getFullYear()}-${padZero(fileDate.getMonth() + 1)}-${padZero(fileDate.getDate())}`;
+
+                    // Get file icon based on type
+                    const fileIcon = getFileIcon(fileObj.type);
+
+                    // Create card element
+                    const card = document.createElement('div');
+                    card.className = 'file-card';
+                    card.setAttribute('data-file-id', fileObj.id);
+                    card.innerHTML = `
+        <div class="file-icon">
+            ${fileIcon}
+        </div>
+        <div class="file-info">
+            <div class="file-name">${fileObj.name}</div>
+            <div class="file-details">
+                <span class="file-size">${fileObj.size}</span>
+                <span class="file-date">${formattedDate}</span>
+            </div>
+        </div>
+        <div class="file-actions">
+            <button class="generate-quiz-btn" data-file-id="${fileObj.id}">
+                <i class="fas fa-brain"></i>
+            </button>
+            <button class="delete-file-btn" data-file-id="${fileObj.id}">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    `;
+
+                    // Add to container
+                    uploadedFilesContainer.appendChild(card);
+
+                    // Add event listeners for buttons
+                    card.querySelector('.generate-quiz-btn').addEventListener('click', function() {
+                        generateQuizFromFile(fileObj);
+                    });
+
+                    card.querySelector('.delete-file-btn').addEventListener('click', function() {
+                        deleteFile(fileObj.id);
+                    });
+                }
+
+                // Get file type from file name
+                function getFileType(fileName) {
+                    const extension = fileName.split('.').pop().toLowerCase();
+
+                    if (['pdf', 'doc', 'docx', 'txt'].includes(extension)) {
+                        return 'document';
+                    } else if (['jpg', 'jpeg', 'png', 'gif'].includes(extension)) {
+                        return 'image';
+                    } else {
+                        return 'other';
+                    }
+                }
+
+                // Get file icon based on file type
+                function getFileIcon(fileType) {
+                    switch (fileType) {
+                        case 'document':
+                            return '<i class="fas fa-file-alt"></i>';
+                        case 'image':
+                            return '<i class="fas fa-file-image"></i>';
+                        default:
+                            return '<i class="fas fa-file"></i>';
+                    }
+                }
+
+                // Format file size
+                function formatFileSize(bytes) {
+                    if (bytes === 0) return '0 Bytes';
+
+                    const k = 1024;
+                    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+                    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+                }
+
+                // Save file to localStorage
+                function saveFileToLocalStorage(fileObj) {
+                    // Get existing files
+                    let files = JSON.parse(localStorage.getItem('lecture-notes')) || [];
+
+                    // Add new file
+                    files.push(fileObj);
+
+                    // Save back to localStorage
+                    localStorage.setItem('lecture-notes', JSON.stringify(files));
+                }
+
+                // Delete file
+                function deleteFile(fileId) {
+                    if (confirm('Are you sure you want to delete this file?')) {
+                        // Get existing files
+                        let files = JSON.parse(localStorage.getItem('lecture-notes')) || [];
+
+                        // Filter out the file to delete
+                        files = files.filter(file => file.id !== fileId);
+
+                        // Save back to localStorage
+                        localStorage.setItem('lecture-notes', JSON.stringify(files));
+
+                        // Remove from UI
+                        const fileCard = document.querySelector(`.file-card[data-file-id="${fileId}"]`);
+                        if (fileCard) {
+                            fileCard.remove();
+                        }
+
+                        // Show no files message if no files left
+                        const uploadedFilesContainer = document.getElementById('uploaded-files-container');
+                        if (uploadedFilesContainer && files.length === 0) {
+                            uploadedFilesContainer.innerHTML = `
+                <div class="no-files">
+                    <p>No lecture notes uploaded yet.</p>
+                </div>
+            `;
+                        }
+                    }
+                }
+
+                // Generate quiz from file
+                function generateQuizFromFile(fileObj) {
+                    // Hide all content sections
+                    const contentSections = document.querySelectorAll('.dynamic-content');
+                    contentSections.forEach(section => {
+                        section.style.display = 'none';
+                    });
+
+                    // Show lecture notes section
+                    document.getElementById('lecture-notes-content').style.display = 'block';
+
+                    // Start AI thinking animation
+                    startAiThinking(fileObj);
+                }
+
+                // Initialize on document load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Initialize file upload functionality
+                    initializeFileUpload();
+
+                    // Check if we're on the library page
+                    const librarySection = document.getElementById('library-content');
+                    if (librarySection) {
+                        // Add tabs functionality for library
+                        const tabs = librarySection.querySelectorAll('.library-tab');
+                        const tabContents = librarySection.querySelectorAll('.tab-content');
+
+                        tabs.forEach(tab => {
+                            tab.addEventListener('click', function() {
+                                // Get tab content ID
+                                const tabId = this.getAttribute('data-tab');
+
+                                // Remove active class from all tabs
+                                tabs.forEach(t => t.classList.remove('active'));
+
+                                // Add active class to clicked tab
+                                this.classList.add('active');
+
+                                // Hide all tab contents
+                                tabContents.forEach(content => {
+                                    content.style.display = 'none';
+                                });
+
+                                // Show selected tab content
+                                document.getElementById(tabId).style.display = 'block';
+                            });
+                        });
+
+                        // Show first tab by default
+                        tabs[0].click();
+                    }
+                });
+
+
+
+
+                // Function to generate quiz from lecture note
+                function generateQuizFromLectureNote(lectureNote) {
+                    // In a real app, this would analyze the file content
+                    // For this example, we'll create a more comprehensive quiz based on the file name
+
+                    // Sample questions based on file name pattern
+                    let questionsHTML = '';
+                    const fileName = lectureNote.name.toLowerCase();
+                    let questionCount = 10; // Increased to 10 questions
+
+                    // Arrays to hold questions for different topics
+                    const introQuestions = [{
+                        question: "What is the main purpose of the introductory concepts covered in this lecture?",
+                        options: [
+                            "To provide historical background",
+                            "To establish foundational knowledge",
+                            "To compare with advanced topics",
+                            "To present case studies"
+                        ]
+                    }, {
+                        question: "Which concept is most likely discussed first in an introductory lecture?",
+                        options: [
+                            "Advanced implementation details",
+                            "Core definitions and terminology",
+                            "Specialized use cases",
+                            "Performance optimization"
+                        ]
+                    }, {
+                        question: "How do introductory courses typically structure knowledge?",
+                        options: [
+                            "From complex to simple",
+                            "From theoretical to practical",
+                            "From simple to complex",
+                            "From specialized to general"
+                        ]
+                    }, {
+                        question: "What is the typical role of examples in introductory material?",
+                        options: [
+                            "To confuse students",
+                            "To illustrate complex concepts with familiar scenarios",
+                            "To replace theoretical foundations",
+                            "To focus only on edge cases"
+                        ]
+                    }, {
+                        question: "Which learning approach is most effective for introductory content?",
+                        options: [
+                            "Memorization without understanding",
+                            "Building on existing knowledge progressively",
+                            "Skipping basics and focusing on advanced topics",
+                            "Focusing only on niche applications"
+                        ]
+                    }, {
+                        question: "Which assessment method best evaluates understanding of introductory concepts?",
+                        options: [
+                            "Verbatim recall questions",
+                            "Application and synthesis problems",
+                            "Advanced research projects",
+                            "Industry certification exams"
+                        ]
+                    }, {
+                        question: "What makes an effective introduction to a new subject?",
+                        options: [
+                            "Using jargon without explanation",
+                            "Presenting all possible details immediately",
+                            "Establishing clear context and relevance",
+                            "Focusing only on historical development"
+                        ]
+                    }, {
+                        question: "How should prerequisite knowledge be handled in introductory materials?",
+                        options: [
+                            "Ignored completely",
+                            "Briefly reviewed or referenced",
+                            "Covered in full detail",
+                            "Replaced with new terminology"
+                        ]
+                    }, {
+                        question: "What is the purpose of defining the scope in an introduction?",
+                        options: [
+                            "To limit student creativity",
+                            "To set clear expectations about what will be covered",
+                            "To make the subject seem more complex",
+                            "To discourage further inquiry"
+                        ]
+                    }, {
+                        question: "How does an effective introduction address student motivation?",
+                        options: [
+                            "By emphasizing difficulty",
+                            "By connecting content to real-world applications",
+                            "By downplaying the importance of the subject",
+                            "By focusing only on theoretical importance"
+                        ]
+                    }];
+
+                    const mlQuestions = [{
+                        question: "Which of the following is a type of machine learning algorithm?",
+                        options: [
+                            "SQL",
+                            "Random Forest",
+                            "JSON",
+                            "HTML"
+                        ]
+                    }, {
+                        question: "What is the primary goal of supervised learning?",
+                        options: [
+                            "To find patterns in unlabeled data",
+                            "To predict outputs based on labeled training data",
+                            "To optimize database queries",
+                            "To design neural network architecture"
+                        ]
+                    }, {
+                        question: "Which metric is commonly used to evaluate regression models?",
+                        options: [
+                            "Precision and Recall",
+                            "Mean Squared Error (MSE)",
+                            "Confusion Matrix",
+                            "ROC Curve"
+                        ]
+                    }, {
+                        question: "What does the term 'overfitting' mean in machine learning?",
+                        options: [
+                            "When a model performs well on training data but poorly on new data",
+                            "When a model is too simple to capture patterns",
+                            "When training takes too much time",
+                            "When the dataset is too large"
+                        ]
+                    }, {
+                        question: "Which technique helps prevent overfitting?",
+                        options: [
+                            "Using more features",
+                            "Regularization",
+                            "Training for more epochs",
+                            "Using smaller datasets"
+                        ]
+                    }, {
+                        question: "What is feature engineering in machine learning?",
+                        options: [
+                            "Building new neural networks",
+                            "Training models faster",
+                            "Creating, transforming, or selecting features to improve model performance",
+                            "Optimizing database queries"
+                        ]
+                    }, {
+                        question: "Which algorithm is an example of unsupervised learning?",
+                        options: [
+                            "Linear Regression",
+                            "K-means Clustering",
+                            "Decision Trees",
+                            "Logistic Regression"
+                        ]
+                    }, {
+                        question: "What is the role of the activation function in neural networks?",
+                        options: [
+                            "To speed up training",
+                            "To reduce computational complexity",
+                            "To introduce non-linearity",
+                            "To store training data"
+                        ]
+                    }, {
+                        question: "What does CNN stand for in deep learning?",
+                        options: [
+                            "Computer Neural Network",
+                            "Convolutional Neural Network",
+                            "Cascading Neural Nodes",
+                            "Complex Network Navigation"
+                        ]
+                    }, {
+                        question: "What is the difference between training and test datasets?",
+                        options: [
+                            "Training data is larger, test data is smaller",
+                            "Training data is used to build the model, test data evaluates performance",
+                            "Training data is more recent, test data is older",
+                            "There is no difference"
+                        ]
+                    }];
+
+                    const defaultQuestions = [{
+                        question: `Based on the lecture notes "${lectureNote.name}", which statement is most likely true?`,
+                        options: [
+                            "The topic covers theoretical foundations",
+                            "The topic focuses on practical applications",
+                            "The topic explores historical development",
+                            "The topic analyzes case studies"
+                        ]
+                    }, {
+                        question: `What study approach would be most effective for mastering the content in "${lectureNote.name}"?`,
+                        options: [
+                            "Memorizing key terms and definitions",
+                            "Working through practice problems",
+                            "Group discussion and debate",
+                            "Creating visual diagrams and mind maps"
+                        ]
+                    }, {
+                        question: "Which learning style is best supported by this type of content?",
+                        options: [
+                            "Visual learning",
+                            "Auditory learning",
+                            "Kinesthetic learning",
+                            "A combination of multiple styles"
+                        ]
+                    }, {
+                        question: "What is the typical organizational structure for this type of content?",
+                        options: [
+                            "Chronological ordering",
+                            "Problem-solution format",
+                            "Concept hierarchy from general to specific",
+                            "Comparative analysis"
+                        ]
+                    }, {
+                        question: "How would you best prepare for an exam on this material?",
+                        options: [
+                            "Creating flashcards for key terms",
+                            "Writing summary notes and concept maps",
+                            "Teaching the material to someone else",
+                            "All of the above"
+                        ]
+                    }, {
+                        question: "What type of assessment would best measure understanding of this content?",
+                        options: [
+                            "Multiple choice questions",
+                            "Essay questions",
+                            "Project-based assessment",
+                            "Oral examination"
+                        ]
+                    }, {
+                        question: "Which supplementary resource would most enhance learning of this material?",
+                        options: [
+                            "Video tutorials",
+                            "Practice exercises",
+                            "Discussion forums",
+                            "Research papers"
+                        ]
+                    }, {
+                        question: "How does this content likely connect to real-world applications?",
+                        options: [
+                            "Through case studies",
+                            "Through practical examples",
+                            "Through industry standards",
+                            "Through theoretical frameworks"
+                        ]
+                    }, {
+                        question: "What critical thinking skill is most important for this content?",
+                        options: [
+                            "Analysis",
+                            "Synthesis",
+                            "Evaluation",
+                            "Application"
+                        ]
+                    }, {
+                        question: "Which follow-up topic would be most logical after mastering this content?",
+                        options: [
+                            "Advanced theoretical concepts",
+                            "Practical applications",
+                            "Related interdisciplinary topics",
+                            "Historical development of the field"
+                        ]
+                    }];
+
+                    // Select which question set to use based on file name
+                    let questionSet;
+                    if (fileName.includes('introduction') || fileName.includes('basics')) {
+                        questionSet = introQuestions;
+                    } else if (fileName.includes('machine') || fileName.includes('learning') || fileName.includes('ml')) {
+                        questionSet = mlQuestions;
+                    } else {
+                        questionSet = defaultQuestions;
+                    }
+
+                    // Generate HTML for questions
+                    questionSet.forEach((q, index) => {
+                                questionsHTML += `
+            <div class="question" data-question-id="${index + 1}" style="display: ${index === 0 ? 'block' : 'none'}">
+                <h3>Question ${index + 1}:</h3>
+                <p>${q.question}</p>
+                <div class="options">
+                    ${q.options.map((option, optIndex) => `
+                        <div class="option">
+                            <input type="radio" id="q${index + 1}${String.fromCharCode(97 + optIndex)}" name="q${index + 1}" value="${String.fromCharCode(97 + optIndex)}">
+                            <label for="q${index + 1}${String.fromCharCode(97 + optIndex)}">${option}</label>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    });
+
+    // Store correct answers (would be dynamic in a real app)
+    const correctAnswers = {};
+    for (let i = 1; i <= questionCount; i++) {
+        // Simulating correct answers - in a real app these would be determined based on content
+        correctAnswers[`q${i}`] = String.fromCharCode(97 + Math.floor(Math.random() * 4));
+    }
+
+    // Save correct answers to localStorage for later scoring
+    localStorage.setItem(`correctAnswers_${lectureNote.id}`, JSON.stringify(correctAnswers));
+
+    // Return quiz object
+    return {
+        questionsHTML: questionsHTML,
+        questionCount: questionCount
+    };
+}
+
+// Function to start quiz
+function startQuiz(lectureNote) {
+    // Hide all content sections
+    const contentSections = document.querySelectorAll('.dynamic-content');
+    contentSections.forEach(section => {
+        section.style.display = 'none';
+    });
+
+    // Create or get quiz view
+    let quizView = document.getElementById('quiz-view');
+    if (!quizView) {
+        const quizHTML = `
+            <div id="quiz-view" class="dynamic-content">
+                <div class="quiz-card">
+                    <div class="quiz-header">
+                        <h2>Quiz: ${lectureNote.name}</h2>
+                        <div class="quiz-timer-container">
+                            <div class="quiz-timer-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div id="quiz-timer">00:00</div>
+                        </div>
+                    </div>
+                    <div class="question-container">
+                        <!-- Questions will be loaded here -->
+                    </div>
+                    <div class="quiz-navigation">
+                        <button class="nav-button prev" onclick="prevQuestion()" style="visibility: hidden">
+                            << Previous
+                        </button>
+                        <button class="nav-button next" onclick="nextQuestion()">
+                            Next >>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.querySelector('.content-area').insertAdjacentHTML('beforeend', quizHTML);
+        quizView = document.getElementById('quiz-view');
+    } else {
+        // Update quiz title
+        quizView.querySelector('.quiz-header h2').textContent = `Quiz: ${lectureNote.name}`;
+        // Reset timer
+        quizView.querySelector('#quiz-timer').textContent = '00:00';
+    }
+
+    // Store the current quiz file ID for scoring later
+    localStorage.setItem('current_quiz_file_id', lectureNote.id);
+
+    // Show quiz view
+    quizView.style.display = 'block';
+
+    // Generate quiz content
+    const quiz = generateQuizFromLectureNote(lectureNote);
+    
+    // Load questions
+    const questionContainer = quizView.querySelector('.question-container');
+    questionContainer.innerHTML = quiz.questionsHTML;
+    
+    // Setup navigation and make options clickable
+    setupQuizNavigation();
+    makeOptionsClickable();
+    
+    // Start timer
+    startQuizTimer();
+}
+
+// Function to finish quiz and calculate score
+window.finishQuiz = function() {
+    // Stop timer
+    clearInterval(quizTimerInterval);
+
+    // Get the time elapsed
+    const timerElement = document.getElementById('quiz-timer');
+    const timeText = timerElement.textContent;
+
+    // Get file ID for the current quiz
+    const fileId = localStorage.getItem('current_quiz_file_id');
+    
+    // Get correct answers from localStorage
+    const correctAnswers = JSON.parse(localStorage.getItem(`correctAnswers_${fileId}`)) || {};
+    
+    // Calculate quiz score
+    const questions = document.querySelectorAll('.question');
+    let correctCount = 0;
+    let incorrectCount = 0;
+    let unansweredCount = 0;
+    
+    questions.forEach((question, index) => {
+        const questionId = question.getAttribute('data-question-id');
+        const radioName = `q${questionId}`;
+        const selectedOption = document.querySelector(`input[name="${radioName}"]:checked`);
+        
+        if (selectedOption) {
+            if (selectedOption.value === correctAnswers[radioName]) {
+                correctCount++;
+            } else {
+                incorrectCount++;
+            }
+        } else {
+            unansweredCount++;
+            incorrectCount++; // Count unanswered as incorrect
+        }
+    });
+    
+    // Calculate points based on 10 points per correct answer
+    const totalPoints = correctCount * 10;
+    
+    // Determine badge based on score percentage
+    let badge = "No Badge";
+    const scorePercentage = (correctCount / questions.length) * 100;
+    
+    if (scorePercentage >= 90) {
+        badge = "Gold Badge";
+    } else if (scorePercentage >= 75) {
+        badge = "Silver Badge";
+    } else if (scorePercentage >= 60) {
+        badge = "Bronze Badge";
+    }
+
+    // Hide quiz view
+    document.getElementById('quiz-view').style.display = 'none';
+
+    // Create scoreboard element if it doesn't exist
+    if (!document.getElementById('scoreboard-view')) {
+        const scoreboardHTML = `
+            <div id="scoreboard-view" class="scoreboard-container">
+                <div id="balloons-container"></div>
+                <div class="scoreboard-card">
+                    <div class="scoreboard-header">
+                        <h1 class="scoreboard-title">Score Board</h1>
+                        <div class="trophy-section">
+                            <img src="6.png" alt="Trophy" class="trophy-image">
+                            <div class="flower">
+                                <div class="flower-center">${badge}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="congratulations-section">
+                        <h2 class="congratulations">Congratulations!</h2>
+                        <p class="score-text">You've scored <span class="points">+${totalPoints} points</span></p>
+                        <p class="time-text">In ${timeText}</p>
+                    </div>
+                    
+                    <div class="confetti-section">
+                        <img src="8.png" alt="Confetti" class="confetti-image">
+                    </div>
+                    
+                    <div class="score-details">
+                        <div class="detail-column">
+                            <p class="detail-text">${correctCount} Correct Answers</p>
+                        </div>
+                        <div class="detail-column border-sides">
+                            <p class="detail-text">${correctCount} Correct Answers</p>
+                            <p class="detail-text">${incorrectCount} Wrong Answers</p>
+                        </div>
+                        <div class="detail-column">
+                            <div class="share-button">
+                                <img src="9.png" alt="Share" class="share-icon">
+                                <span>Share</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="action-btn try-again" onclick="restartQuiz()">Try Again</button>
+                    <button class="action-btn save" onclick="saveQuizResults()">Save</button>
+                </div>
+            </div>
+        `;
+
+        // Append scoreboard to main content
+        document.querySelector('.content-area').insertAdjacentHTML('beforeend', scoreboardHTML);
+
+        // Start balloon animation
+        createBalloons();
+    } else {
+        // If scoreboard already exists, update it with current results
+        const scoreboardView = document.getElementById('scoreboard-view');
+        
+        // Update badge
+        scoreboardView.querySelector('.flower-center').textContent = badge;
+        
+        // Update points
+        scoreboardView.querySelector('.points').textContent = `+${totalPoints} points`;
+        
+        // Update time
+        scoreboardView.querySelector('.time-text').textContent = `In ${timeText}`;
+        
+        // Update correct/wrong counts
+        const detailColumns = scoreboardView.querySelectorAll('.detail-column');
+        detailColumns[0].querySelector('.detail-text').textContent = `${correctCount} Correct Answers`;
+        
+        const borderColumn = detailColumns[1].querySelectorAll('.detail-text');
+        borderColumn[0].textContent = `${correctCount} Correct Answers`;
+        borderColumn[1].textContent = `${incorrectCount} Wrong Answers`;
+        
+        // Show the scoreboard
+        scoreboardView.style.display = 'block';
+        
+        // Recreate balloons
+        createBalloons();
+    }
+
+    // Hide course list
+    document.querySelector('.course-list').style.display = 'none';
+    
+    // Save quiz data for later saving
+    const quizData = {
+        fileId: fileId,
+        lectureName: document.querySelector('.quiz-header h2').textContent.replace('Quiz: ', ''),
+        timeElapsed: timeText,
+        correctCount: correctCount,
+        incorrectCount: incorrectCount,
+        totalPoints: totalPoints,
+        badge: badge
+    };
+    
+    // Store current quiz results temporarily
+    localStorage.setItem('current_quiz_results', JSON.stringify(quizData));
+};
+
+// Save quiz results function
+window.saveQuizResults = function() {
+    // Get quiz data from temporary storage
+    const quizData = JSON.parse(localStorage.getItem('current_quiz_results')) || {};
+    
+    // Create a record to save
+    const quizResult = {
+        id: Date.now(), // Unique ID based on timestamp
+        name: `Quiz Result: ${quizData.lectureName}`,
+        date: new Date().toISOString(),
+        lectureFile: quizData.lectureName,
+        fileId: quizData.fileId,
+        timeElapsed: quizData.timeElapsed,
+        points: quizData.totalPoints,
+        correctAnswers: quizData.correctCount,
+        wrongAnswers: quizData.incorrectCount,
+        badge: quizData.badge,
+        type: 'quiz-result' // Add a type identifier
+    };
+
+    // Get existing quiz results from localStorage
+    let quizResults = JSON.parse(localStorage.getItem('quiz-results')) || [];
+
+    // Add new result
+    quizResults.push(quizResult);
+
+    // Save back to localStorage
+    localStorage.setItem('quiz-results', JSON.stringify(quizResults));
+
+    // Show success message
+    alert('Quiz results saved successfully to your library!');
+
+    // Hide scoreboard
+    document.getElementById('scoreboard-view').style.display = 'none';
+
+    // Show course list
+    document.querySelector('.course-list').style.display = 'block';
+    
+    // Clear temporary storage
+    localStorage.removeItem('current_quiz_results');
+};
+
+// Function to display selectable lecture files and start AI processing when selected
+function showLectureFileSelector() {
+    // Get files from localStorage
+    const files = JSON.parse(localStorage.getItem('lecture-notes')) || [];
+    
+    // If no files available, show message
+    if (files.length === 0) {
+        alert("No lecture notes available. Please upload some files first.");
+        return;
+    }
+    
+    // Hide all content sections
+    const contentSections = document.querySelectorAll('.dynamic-content');
+    contentSections.forEach(section => {
+        section.style.display = 'none';
+    });
+    
+    // Create or get file selector view
+    let fileSelectorView = document.getElementById('file-selector-view');
+    if (!fileSelectorView) {
+        const fileSelectorHTML = `
+            <div id="file-selector-view" class="dynamic-content">
+                <div class="selector-card">
+                    <div class="selector-header">
+                        <h2>Select a Lecture Note for Quiz</h2>
+                    </div>
+                    <div class="file-list-container">
+                        <div class="file-list">
+                            <!-- Files will be loaded here -->
+                        </div>
+                    </div>
+                    <div class="selector-footer">
+                        <button class="cancel-btn" onclick="cancelSelection()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.querySelector('.content-area').insertAdjacentHTML('beforeend', fileSelectorHTML);
+        fileSelectorView = document.getElementById('file-selector-view');
+    }
+    
+    // Show the file selector
+    fileSelectorView.style.display = 'block';
+    
+    // Populate the file list
+    const fileListContainer = fileSelectorView.querySelector('.file-list');
+    fileListContainer.innerHTML = '';
+    
+    files.forEach(file => {
+        // Format date
+        const fileDate = new Date(file.date);
+        const formattedDate = `${fileDate.getFullYear()}-${padZero(fileDate.getMonth() + 1)}-${padZero(fileDate.getDate())}`;
+        
+        // Get file icon based on type
+        const fileIcon = getFileIcon(file.type);
+        
+        // Create file item
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-selector-item';
+        fileItem.innerHTML = `
+            <div class="file-icon">
+                ${fileIcon}
+            </div>
+            <div class="file-info">
+                <div class="file-name">${file.name}</div>
+                <div class="file-details">
+                    <span class="file-size">${file.size}</span>
+                    <span class="file-date">${formattedDate}</span>
+                </div>
+            </div>
+        `;
+        
+        // Add click event to select file
+        fileItem.addEventListener('click', function() {
+            // Hide file selector
+            fileSelectorView.style.display = 'none';
+            
+            // Show lecture notes content for AI thinking animation
+            document.getElementById('lecture-notes-content').style.display = 'block';
+            
+            // Start AI thinking with the selected file
+            startAiThinking(file);
+        });
+        
+        // Add to container
+        fileListContainer.appendChild(fileItem);
+    });
+}
+
+// Function to cancel file selection
+window.cancelSelection = function() {
+    // Hide file selector
+    document.getElementById('file-selector-view').style.display = 'none';
+    
+    // Show course list
+    document.querySelector('.course-list').style.display = 'block';
+};
+
+// Function to start AI thinking animation and then show quiz
+function startAiThinking(fileObj) {
+    // Get or create AI thinking section
+    let aiThinkingSection = document.getElementById('ai-thinking-section');
+    if (!aiThinkingSection) {
+        const aiThinkingHTML = `
+            <div id="ai-thinking-section">
+                <div class="ai-thinking-animation">
+                    <div class="ai-thinking-icon">
+                        <i class="fas fa-brain fa-pulse"></i>
+                    </div>
+                    <div class="ai-thinking-text">
+                        <p>AI is analyzing your lecture notes...</p>
+                        <p class="file-name">${fileObj.name}</p>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress"></div>
+                </div>
+            </div>
+        `;
+        document.getElementById('lecture-notes-content').innerHTML = aiThinkingHTML;
+    } else {
+        // Update file name
+        aiThinkingSection.querySelector('.file-name').textContent = fileObj.name;
+        // Reset progress bar
+        aiThinkingSection.querySelector('.progress').style.width = '0%';
+    }
+    
+    // Animate progress bar
+    const progressBar = document.querySelector('.progress');
+    progressBar.style.width = '0%';
+    
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += 1;
+        progressBar.style.width = `${progress}%`;
+        
+        if (progress >= 100) {
+            clearInterval(interval);
+            // Wait a moment before showing quiz
+            setTimeout(() => {
+                startQuiz(fileObj);
+            }, 500);
+        }
+    }, 30); // Adjust speed as needed
+}
+
+// Modify the generateQuizFromFile function to show file selector
+function generateQuizFromFile() {
+    showLectureFileSelector();
+}
+
+// Update button event listeners for file cards
+function updateFileCardListeners() {
+    const generateQuizBtns = document.querySelectorAll('.generate-quiz-btn');
+    generateQuizBtns.forEach(btn => {
+        // Remove existing listeners
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+        
+        // Add new listener
+        newBtn.addEventListener('click', function() {
+            generateQuizFromFile();
+        });
+    });
+}
+
+// Add the function to initialize everything
+function enhancedInitialization() {
+    // Initialize file upload functionality
+    initializeFileUpload();
+    
+    // Update file card listeners
+    updateFileCardListeners();
+    
+    // Add listener for direct "Generate Quiz" button if it exists
+    const generateQuizButton = document.getElementById('generate-quiz-button');
+    if (generateQuizButton) {
+        generateQuizButton.addEventListener('click', function() {
+            generateQuizFromFile();
+        });
+    }
+}
+
+// Call initialization when document is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', enhancedInitialization);
+} else {
+    enhancedInitialization();
+}
+
+// Helper function for zero padding
+function padZero(num) {
+    return num.toString().padStart(2, '0');
+}
+            </script>
+</body>
+
+</html>

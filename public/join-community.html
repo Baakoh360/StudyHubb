@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyHub - Join Community</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f7f7f7;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        /* Sidebar */
+        
+        .sidebar {
+            width: 125px;
+            background-color: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding-top: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            color: #888;
+            font-size: 18px;
+        }
+        
+        .sidebar-open {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            background-color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            display: none;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 0 20px 20px;
+        }
+        
+        .logo img {
+            height: 30px;
+        }
+        
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 5px;
+            color: #444;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .menu-item:hover,
+        .menu-item.active {
+            background-color: #f5f5f5;
+        }
+        
+        .menu-item.active {
+            border-left: 3px solid #9c2932;
+        }
+        
+        .menu-text {
+            font-size: 12px;
+            text-align: center;
+            color: #333;
+            margin-top: 5px;
+        }
+        /* Icon colors */
+        
+        .icon-dashboard {
+            color: #3498db;
+        }
+        /* Blue */
+        
+        .icon-upload {
+            color: #2ecc71;
+        }
+        /* Green */
+        
+        .icon-quizzes {
+            color: #f1c40f;
+        }
+        /* Yellow */
+        
+        .icon-library {
+            color: #9b59b6;
+        }
+        /* Purple */
+        
+        .icon-chatbot {
+            color: #e74c3c;
+        }
+        /* Red */
+        
+        .icon-flashcards {
+            color: #1abc9c;
+        }
+        /* Teal */
+        
+        .icon-communities {
+            color: #e67e22;
+        }
+        /* Orange */
+        /* Main Content */
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+        /* Header */
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 20px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+        }
+        
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #9c2932;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 5px;
+            font-size: 14px;
+        }
+        
+        .username {
+            margin-right: 15px;
+            font-size: 14px;
+            color: #444;
+        }
+        
+        .logout-btn {
+            padding: 6px 12px;
+            background-color: transparent;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #444;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background-color: #f5f5f5;
+        }
+        /* Communities List */
+        
+        .communities-container {
+            margin-top: 20px;
+        }
+        
+        .community-card {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .community-info {
+            flex: 1;
+        }
+        
+        .community-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .community-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .community-meta {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .join-community-btn {
+            padding: 8px 16px;
+            background-color: #9c2932;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .join-community-btn:hover {
+            background-color: #7e1f28;
+        }
+        
+        .no-communities {
+            text-align: center;
+            padding: 40px 0;
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #f5f5f5;
+            color: #444;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            text-decoration: none;
+        }
+        
+        .back-btn:hover {
+            background-color: #e5e5e5;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Sidebar open button -->
+    <div class="sidebar-open">
+        <i class="fas fa-bars" style="font-size: 18px;"></i>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <span class="sidebar-close">×</span>
+            <div class="logo">
+                <img src="3.png" alt="StudyHub Logo">
+            </div>
+
+            <a href="dashboard.html" class="menu-item">
+                <i class="fas fa-th-large icon-dashboard" style="font-size: 22px;"></i>
+                <span class="menu-text">Dashboard</span>
+            </a>
+
+            <a href="upload.html" class="menu-item">
+                <i class="fas fa-upload icon-upload" style="font-size: 22px;"></i>
+                <span class="menu-text">Upload</span>
+            </a>
+
+            <a href="quiz.html" class="menu-item">
+                <i class="fas fa-question-circle icon-quizzes" style="font-size: 22px;"></i>
+                <span class="menu-text">Quizzes</span>
+            </a>
+
+            <a href="library.html" class="menu-item">
+                <i class="fas fa-book icon-library" style="font-size: 22px;"></i>
+                <span class="menu-text">My Library</span>
+            </a>
+
+            <a href="chatbot.html" class="menu-item">
+                <i class="fas fa-comment-dots icon-chatbot" style="font-size: 22px;"></i>
+                <span class="menu-text">AI Chatbot</span>
+            </a>
+
+            <a href="flashcards.html" class="menu-item">
+                <i class="far fa-clone icon-flashcards" style="font-size: 22px;"></i>
+                <span class="menu-text">Flashcards</span>
+            </a>
+
+            <a href="community.html" class="menu-item active">
+                <i class="fas fa-users icon-communities" style="font-size: 22px;"></i>
+                <span class="menu-text">Communities</span>
+            </a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header with Search and User Menu -->
+            <div class="header">
+                <div class="search-bar">
+                    <input type="text" id="searchCommunities" class="search-input" placeholder="Search Communities by name">
+                </div>
+
+                <div class="user-menu">
+                    <div class="avatar">M</div>
+                    <span class="username">Mercy D. ▾</span>
+                    <button class="logout-btn">Log out</button>
+                </div>
+            </div>
+
+            <a href="dashboard.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+
+            <h1 class="page-title">Join a Community</h1>
+
+            <div class="communities-container" id="communitiesContainer">
+                <!-- Communities will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle switch functionality
+        const toggleSwitch = document.querySelector('.toggle-switch');
+        if (toggleSwitch) {
+            toggleSwitch.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        }
+
+        // Sidebar close functionality with reopen capability
+        const sidebarClose = document.querySelector('.sidebar-close');
+        const sidebarOpen = document.querySelector('.sidebar-open');
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+
+        // Function to close sidebar
+        function closeSidebar() {
+            sidebar.style.width = '0';
+            sidebar.style.padding = '0';
+            sidebar.style.overflow = 'hidden';
+            mainContent.style.marginLeft = '0';
+            sidebarOpen.style.display = 'flex';
+        }
+
+        // Function to open sidebar
+        function openSidebar() {
+            sidebar.style.width = '125px';
+            sidebar.style.padding = '20px 0 0 0';
+            sidebar.style.overflow = 'visible';
+            sidebarOpen.style.display = 'none';
+        }
+
+        // Close sidebar when X is clicked
+        sidebarClose.addEventListener('click', closeSidebar);
+
+        // Open sidebar when menu button is clicked
+        sidebarOpen.addEventListener('click', openSidebar);
+
+        // Make logout button functional
+        const logoutBtn = document.querySelector('.logout-btn');
+        logoutBtn.addEventListener('click', function() {
+            alert('Logout functionality would go here');
+        });
+
+        // Load communities from local storage
+        function loadCommunities() {
+            const communitiesContainer = document.getElementById('communitiesContainer');
+            const communities = JSON.parse(localStorage.getItem('communities')) || [];
+            const searchTerm = document.getElementById('searchCommunities').value.toLowerCase();
+
+            // Clear the container
+            communitiesContainer.innerHTML = '';
+
+            if (communities.length === 0) {
+                communitiesContainer.innerHTML = `
+                    <div class="no-communities">
+                        <i class="fas fa-users" style="font-size: 40px; color: #ddd; margin-bottom: 15px;"></i>
+                        <p>No communities available. Create one first!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Filter communities based on search term
+            const filteredCommunities = searchTerm ?
+                communities.filter(community => community.name.toLowerCase().includes(searchTerm)) :
+                communities;
+
+            if (filteredCommunities.length === 0) {
+                communitiesContainer.innerHTML = `
+                    <div class="no-communities">
+                        <p>No communities match your search.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Display each community
+            filteredCommunities.forEach(community => {
+                const communityCard = document.createElement('div');
+                communityCard.className = 'community-card';
+                communityCard.innerHTML = `
+                    <div class="community-info">
+                        <h3 class="community-name">${community.name}</h3>
+                        <p class="community-description">${community.description || 'No description available'}</p>
+                        <p class="community-meta">Created by: ${community.creator || 'Unknown'} • Members: ${community.members?.length || 1}</p>
+                    </div>
+                    <button class="join-community-btn" data-id="${community.id}">Join</button>
+                `;
+                communitiesContainer.appendChild(communityCard);
+            });
+
+            // Add event listeners to join buttons
+            document.querySelectorAll('.join-community-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const communityId = this.getAttribute('data-id');
+                    joinCommunity(communityId);
+                });
+            });
+        }
+
+        // Function to join a community
+        function joinCommunity(communityId) {
+            // Get communities from local storage
+            const communities = JSON.parse(localStorage.getItem('communities')) || [];
+
+            // Find the community
+            const communityIndex = communities.findIndex(c => c.id == communityId);
+
+            if (communityIndex !== -1) {
+                // Get current user info
+                const currentUser = {
+                    id: 'user123', // This would normally come from your authentication system
+                    name: 'Mercy D.'
+                };
+
+                // Check if user is already a member
+                const community = communities[communityIndex];
+                if (!community.members) {
+                    community.members = [];
+                }
+
+                const isMember = community.members.some(member => member.id === currentUser.id);
+
+                if (!isMember) {
+                    // Add user to community members
+                    community.members.push(currentUser);
+
+                    // Update localStorage
+                    localStorage.setItem('communities', JSON.stringify(communities));
+
+                    alert(`You have successfully joined the "${community.name}" community!`);
+
+                    // Redirect to community page or update UI as needed
+                    window.location.href = "communityview.html";
+                } else {
+                    alert(`You are already a member of the "${community.name}" community.`);
+                }
+            } else {
+                alert('Community not found.');
+            }
+        }
+
+        // Load communities on page load
+        document.addEventListener('DOMContentLoaded', loadCommunities);
+
+        // Search functionality
+        document.getElementById('searchCommunities').addEventListener('input', loadCommunities);
+    </script>
+</body>
+
+</html>

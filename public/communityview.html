@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyHub - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f7f7f7;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        /* Sidebar */
+        
+        .sidebar {
+            width: 125px;
+            background-color: #fff;
+            border-right: 1px solid #e0e0e0;
+            padding-top: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            color: #888;
+            font-size: 18px;
+        }
+        
+        .sidebar-open {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            background-color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            display: none;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 0 20px 20px;
+        }
+        
+        .logo img {
+            height: 30px;
+        }
+        
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 5px;
+            color: #444;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .menu-item:hover,
+        .menu-item.active {
+            background-color: #f5f5f5;
+        }
+        
+        .menu-item.active {
+            border-left: 3px solid #9c2932;
+        }
+        
+        .menu-text {
+            font-size: 12px;
+            text-align: center;
+            color: #333;
+            margin-top: 5px;
+        }
+        /* Icon colors */
+        
+        .icon-dashboard {
+            color: #3498db;
+        }
+        /* Blue */
+        
+        .icon-upload {
+            color: #2ecc71;
+        }
+        /* Green */
+        
+        .icon-quizzes {
+            color: #f1c40f;
+        }
+        /* Yellow */
+        
+        .icon-library {
+            color: #9b59b6;
+        }
+        /* Purple */
+        
+        .icon-chatbot {
+            color: #e74c3c;
+        }
+        /* Red */
+        
+        .icon-flashcards {
+            color: #1abc9c;
+        }
+        /* Teal */
+        
+        .icon-communities {
+            color: #e67e22;
+        }
+        /* Orange */
+        /* Main Content */
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+        /* Header */
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 20px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+        }
+        
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #9c2932;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 5px;
+            font-size: 14px;
+        }
+        
+        .username {
+            margin-right: 15px;
+            font-size: 14px;
+            color: #444;
+        }
+        
+        .logout-btn {
+            padding: 6px 12px;
+            background-color: transparent;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: #444;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background-color: #f5f5f5;
+        }
+        /* Welcome Card */
+        
+        .welcome-card {
+            background-color: #fff2ea;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .welcome-text {
+            color: #666;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+        
+        .user-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .start-button {
+            display: inline-block;
+            color: #9c2932;
+            font-size: 14px;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+        /* Stats Grid */
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background-color: #fff9db;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-title {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        
+        .stat-value {
+            font-size: 40px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .stat-icons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .folder-icon {
+            color: #f1c40f;
+            font-size: 24px;
+            opacity: 0.5;
+        }
+        
+        .fire-icon {
+            color: #e67e22;
+            font-size: 24px;
+            opacity: 0.5;
+        }
+        
+        .doc-icon {
+            color: #3498db;
+            font-size: 24px;
+            opacity: 0.5;
+        }
+        /* Recents Section */
+        
+        .recents-section {
+            margin-top: 30px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .no-recents {
+            color: #888;
+            font-size: 14px;
+            padding: 20px 0;
+        }
+        /* Footer Toggle */
+        
+        .footer-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            z-index: 90;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            background-color: #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .toggle-switch.active {
+            background-color: #9c2932;
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+        }
+        /* Community Specific Styles */
+        
+        .community-header {
+            background-color: #ffe8d6;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+        
+        .community-info {
+            flex: 1;
+        }
+        
+        .community-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .community-description {
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .community-meta {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .community-meta div {
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .community-meta i {
+            margin-right: 5px;
+        }
+        
+        .join-button {
+            padding: 8px 16px;
+            background-color: #9c2932;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .join-button:hover {
+            background-color: #821f27;
+        }
+        
+        .leave-button {
+            padding: 7px 16px;
+            background-color: transparent;
+            color: #666;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .leave-button:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .community-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: space-between;
+        }
+        
+        .back-to-communities {
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .back-to-communities i {
+            margin-right: 5px;
+        }
+        
+        .back-to-communities:hover {
+            color: #9c2932;
+        }
+        /* Tabs Navigation */
+        
+        .community-navigation {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .nav-tab {
+            padding: 10px 20px;
+            font-size: 14px;
+            color: #555;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .nav-tab:hover {
+            color: #9c2932;
+        }
+        
+        .nav-tab.active {
+            color: #9c2932;
+            border-bottom: 2px solid #9c2932;
+        }
+        /* Content Sections */
+        
+        .community-content-section {
+            display: none;
+        }
+        
+        .community-content-section.active {
+            display: block;
+        }
+        /* Post Creation Form */
+        
+        .post-creation {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .post-creation textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: none;
+            min-height: 80px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .post-media-options {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .media-option {
+            color: #666;
+            cursor: pointer;
+        }
+        
+        .media-option:hover {
+            color: #9c2932;
+        }
+        
+        .post-button {
+            padding: 6px 16px;
+            background-color: #9c2932;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .post-button:hover {
+            background-color: #821f27;
+        }
+        /* Posts Feed */
+        
+        .posts-feed {
+            margin-bottom: 20px;
+        }
+        
+        .post {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e67e22;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .post-author {
+            flex: 1;
+        }
+        
+        .post-author-name {
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .post-date {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .post-content {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .post-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        
+        .post-actions-bar {
+            display: flex;
+            gap: 15px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+        
+        .post-action {
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .post-action i {
+            margin-right: 5px;
+        }
+        
+        .post-action:hover {
+            color: #9c2932;
+        }
+        /* Comments Section */
+        
+        .post-comments {
+            margin-top: 15px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+        
+        .comment {
+            display: flex;
+            margin-bottom: 8px;
+        }
+        
+        .comment-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #3498db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        
+        .comment-content {
+            background-color: #f5f5f5;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 13px;
+            flex: 1;
+        }
+        
+        .comment-author {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        .comment-text {
+            color: #333;
+        }
+        
+        .comment-form {
+            display: flex;
+            margin-top: 10px;
+        }
+        
+        .comment-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 13px;
+            margin-right: 10px;
+        }
+        
+        .comment-submit {
+            background-color: #9c2932;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 0 12px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        /* Members Section */
+        
+        .members-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .member-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .member-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #9b59b6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .member-info {
+            flex: 1;
+        }
+        
+        .member-name {
+            font-weight: bold;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .member-role {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .member-join-date {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+        /* Resources Section */
+        
+        .resources-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .resource-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .resource-thumbnail {
+            height: 120px;
+            background-color: #f1f1f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 40px;
+        }
+        
+        .resource-thumbnail.pdf {
+            background-color: #ffebee;
+            color: #e74c3c;
+        }
+        
+        .resource-thumbnail.doc {
+            background-color: #e3f2fd;
+            color: #3498db;
+        }
+        
+        .resource-thumbnail.ppt {
+            background-color: #fff8e1;
+            color: #f1c40f;
+        }
+        
+        .resource-info {
+            padding: 15px;
+        }
+        
+        .resource-name {
+            font-weight: bold;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .resource-meta {
+            font-size: 12px;
+            color: #888;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .resource-author {
+            font-weight: 500;
+        }
+        /* Calendar Section */
+        
+        .events-calendar {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .event-list {
+            margin-top: 15px;
+        }
+        
+        .event-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+        }
+        
+        .event-date {
+            width: 80px;
+            text-align: center;
+            padding-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .event-day {
+            font-size: 24px;
+            font-weight: bold;
+            color: #9c2932;
+        }
+        
+        .event-month {
+            font-size: 13px;
+            color: #666;
+            text-transform: uppercase;
+        }
+        
+        .event-info {
+            flex: 1;
+        }
+        
+        .event-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .event-details {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .event-time {
+            display: flex;
+            align-items: center;
+            color: #888;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+        
+        .event-time i {
+            margin-right: 5px;
+            font-size: 12px;
+        }
+        
+        .add-event-btn {
+            margin-top: 15px;
+            padding: 8px 16px;
+            background-color: #9c2932;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            display: inline-block;
+        }
+        /* Footer Toggle */
+        
+        .footer-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            z-index: 90;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            background-color: #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .toggle-switch.active {
+            background-color: #9c2932;
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+        }
+        /* Poll Widget */
+        
+        .poll-widget {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .poll-question {
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .poll-options {
+            margin-bottom: 15px;
+        }
+        
+        .poll-option {
+            margin-bottom: 10px;
+        }
+        
+        .poll-option-bar {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+        
+        .poll-progress {
+            flex: 1;
+            height: 10px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            margin-right: 10px;
+            overflow: hidden;
+        }
+        
+        .poll-progress-fill {
+            height: 100%;
+            background-color: #9c2932;
+        }
+        
+        .poll-percentage {
+            font-size: 12px;
+            color: #666;
+            width: 40px;
+            text-align: right;
+        }
+        
+        .poll-votes {
+            font-size: 12px;
+            color: #888;
+            margin-top: 10px;
+            text-align: right;
+        }
+        
+        .poll-submit {
+            padding: 6px 16px;
+            background-color: #9c2932;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+</head>
+
+<body>
+    <!-- Sidebar open button -->
+    <div class="sidebar-open">
+        <i class="fas fa-bars" style="font-size: 18px;"></i>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <span class="sidebar-close">×</span>
+            <div class="logo">
+                <img src="3.png" alt="StudyHub Logo">
+            </div>
+
+            <a href="dashboard.html" class="menu-item active">
+                <i class="fas fa-th-large icon-dashboard" style="font-size: 22px;"></i>
+                <span class="menu-text">Dashboard</span>
+            </a>
+
+            <a href="upload.html" class="menu-item">
+                <i class="fas fa-upload icon-upload" style="font-size: 22px;"></i>
+                <span class="menu-text">Upload</span>
+            </a>
+
+            <a href="quiz.html" class="menu-item">
+                <i class="fas fa-question-circle icon-quizzes" style="font-size: 22px;"></i>
+                <span class="menu-text">Quizzes</span>
+            </a>
+
+            <a href="library.html" class="menu-item">
+                <i class="fas fa-book icon-library" style="font-size: 22px;"></i>
+                <span class="menu-text">My Library</span>
+            </a>
+
+            <a href="chatbot.html" class="menu-item">
+                <i class="fas fa-comment-dots icon-chatbot" style="font-size: 22px;"></i>
+                <span class="menu-text">AI Chatbot</span>
+            </a>
+
+            <a href="flashcards.html" class="menu-item">
+                <i class="far fa-clone icon-flashcards" style="font-size: 22px;"></i>
+                <span class="menu-text">Flashcards</span>
+            </a>
+
+            <a href="community.html" class="menu-item">
+                <i class="fas fa-users icon-communities" style="font-size: 22px;"></i>
+                <span class="menu-text">Communities</span>
+            </a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header with Search and User Menu -->
+            <div class="header">
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="Search Communities by name">
+                </div>
+
+                <div class="user-menu">
+                    <div class="avatar">M</div>
+                    <span class="username">Mercy D. ▾</span>
+                    <button class="logout-btn">Log out</button>
+                </div>
+            </div>
+
+            <!-- Community Header -->
+            <div class="community-header">
+                <div class="community-info">
+                    <h1 id="community-name" class="community-name">Community Name</h1>
+                    <p id="community-description" class="community-description">Community description will appear here.</p>
+                    <div class="community-meta">
+                        <div>
+                            <i class="fas fa-calendar-alt"></i> Created: <span id="created-date">Jan 15, 2023</span>
+                        </div>
+                        <div>
+                            <i class="fas fa-users"></i> Members: <span id="member-count">42</span>
+                        </div>
+                        <div>
+                            <i class="fas fa-book"></i> Resources: <span id="resource-count">15</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="community-actions">
+                    <a href="community.html" class="back-to-communities">
+                        <i class="fas fa-arrow-left"></i> Back to Communities
+                    </a>
+                    <button class="join-button" id="join-toggle">Join Community</button>
+                </div>
+            </div>
+
+            <!-- Community Navigation Tabs -->
+            <div class="community-navigation">
+                <div class="nav-tab active" data-tab="discussion">Discussion</div>
+                <div class="nav-tab" data-tab="resources">Resources</div>
+                <div class="nav-tab" data-tab="members">Members</div>
+                <div class="nav-tab" data-tab="events">Events</div>
+            </div>
+
+            <!-- Discussion Section -->
+            <div class="community-content-section active" id="discussion-section">
+                <div class="content-grid">
+                    <div class="main-column">
+                        <!-- Post Creation Form -->
+                        <div class="post-creation">
+                            <textarea placeholder="Share something with the community..."></textarea>
+                            <div class="post-actions">
+                                <div class="post-media-options">
+                                    <div class="media-option"><i class="fas fa-image"></i></div>
+                                    <div class="media-option"><i class="fas fa-file"></i></div>
+                                    <div class="media-option"><i class="fas fa-link"></i></div>
+                                </div>
+                                <button class="post-button">Post</button>
+                            </div>
+                        </div>
+
+                        <!-- Posts Feed -->
+                        <div class="posts-feed">
+                            <!-- Sample Post 1 -->
+                            <div class="post">
+                                <div class="post-header">
+                                    <div class="post-avatar">JD</div>
+                                    <div class="post-author">
+                                        <div class="post-author-name">John Doe</div>
+                                        <div class="post-date">Yesterday at 3:45 PM</div>
+                                    </div>
+                                </div>
+                                <div class="post-content">
+                                    Just uploaded my notes from today's lecture on Organic Chemistry. Check them out in the resources section!
+                                </div>
+                                <div class="post-actions-bar">
+                                    <div class="post-action"><i class="far fa-thumbs-up"></i> Like (12)</div>
+                                    <div class="post-action"><i class="far fa-comment"></i> Comment (3)</div>
+                                    <div class="post-action"><i class="far fa-bookmark"></i> Save</div>
+                                </div>
+                                <div class="post-comments">
+                                    <div class="comment">
+                                        <div class="comment-avatar">S</div>
+                                        <div class="comment-content">
+                                            <span class="comment-author">Sarah P.</span>
+                                            <span class="comment-text">Thanks for sharing these! They're super helpful for the upcoming quiz.</span>
+                                        </div>
+                                    </div>
+                                    <div class="comment">
+                                        <div class="comment-avatar">M</div>
+                                        <div class="comment-content">
+                                            <span class="comment-author">Mercy D.</span>
+                                            <span class="comment-text">Could you also share the practice problems from last week?</span>
+                                        </div>
+                                    </div>
+                                    <form class="comment-form">
+                                        <input type="text" class="comment-input" placeholder="Write a comment...">
+                                        <button class="comment-submit">Send</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Sample Post 2 -->
+                            <div class="post">
+                                <div class="post-header">
+                                    <div class="post-avatar">AK</div>
+                                    <div class="post-author">
+                                        <div class="post-author-name">Alex Kim</div>
+                                        <div class="post-date">2 days ago</div>
+                                    </div>
+                                </div>
+                                <div class="post-content">
+                                    I'm organizing a study group for next week's exam. Anyone interested? We'll be meeting in the library on Thursday at 6 PM.
+                                </div>
+                                <div class="post-actions-bar">
+                                    <div class="post-action"><i class="far fa-thumbs-up"></i> Like (8)</div>
+                                    <div class="post-action"><i class="far fa-comment"></i> Comment (5)</div>
+                                    <div class="post-action"><i class="far fa-bookmark"></i> Save</div>
+                                </div>
+                                <div class="post-comments">
+                                    <div class="comment">
+                                        <div class="comment-avatar">L</div>
+                                        <div class="comment-content">
+                                            <span class="comment-author">Lisa M.</span>
+                                            <span class="comment-text">I'll be there! Should we bring anything specific?</span>
+                                        </div>
+                                    </div>
+                                    <div class="comment">
+                                        <div class="comment-avatar">R</div>
+                                        <div class="comment-content">
+                                            <span class="comment-author">Ryan T.</span>
+                                            <span class="comment-text">Count me in. I'll bring my practice exams from last semester.</span>
+                                        </div>
+                                    </div>
+                                    <form class="comment-form">
+                                        <input type="text" class="comment-input" placeholder="Write a comment...">
+                                        <button class="comment-submit">Send</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Side Widget Column -->
+                    <div class="side-widgets">
+                        <!-- Poll Widget -->
+                        <div class="poll-widget">
+                            <div class="poll-question">What topics should we cover in our next study session?</div>
+                            <div class="poll-options">
+                                <div class="poll-option">
+                                    <label>
+                                        <input type="radio" name="poll" value="option1"> Organic Chemistry Reactions
+                                    </label>
+                                    <div class="poll-option-bar">
+                                        <div class="poll-progress">
+                                            <div class="poll-progress-fill" style="width: 65%;"></div>
+                                        </div>
+                                        <div class="poll-percentage">65%</div>
+                                    </div>
+                                </div>
+                                <div class="poll-option">
+                                    <label>
+                                        <input type="radio" name="poll" value="option2"> Molecular Structures
+                                    </label>
+                                    <div class="poll-option-bar">
+                                        <div class="poll-progress">
+                                            <div class="poll-progress-fill" style="width: 25%;"></div>
+                                        </div>
+                                        <div class="poll-percentage">25%</div>
+                                    </div>
+                                </div>
+                                <div class="poll-option">
+                                    <label>
+                                        <input type="radio" name="poll" value="option3"> Lab Report Writing
+                                    </label>
+                                    <div class="poll-option-bar">
+                                        <div class="poll-progress">
+                                            <div class="poll-progress-fill" style="width: 10%;"></div>
+                                        </div>
+                                        <div class="poll-percentage">10%</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="poll-submit">Vote</button>
+                            <div class="poll-votes">24 votes so far</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resources Section -->
+            <div class="community-content-section" id="resources-section">
+                <div class="resources-list">
+                    <!-- Sample Resource 1 -->
+                    <div class="resource-card">
+                        <div class="resource-thumbnail pdf">
+                            <i class="far fa-file-pdf"></i>
+                        </div>
+                        <div class="resource-info">
+                            <div class="resource-name">Organic Chemistry Lecture Notes</div>
+                            <div class="resource-meta">
+                                <span class="resource-author">By John D.</span>
+                                <span class="resource-date">Mar 15</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sample Resource 2 -->
+                    <div class="resource-card">
+                        <div class="resource-thumbnail ppt">
+                            <i class="far fa-file-powerpoint"></i>
+                        </div>
+                        <div class="resource-info">
+                            <div class="resource-name">Molecular Structures Presentation</div>
+                            <div class="resource-meta">
+                                <span class="resource-author">By Alex K.</span>
+                                <span class="resource-date">Mar 10</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sample Resource 3 -->
+                    <div class="resource-card">
+                        <div class="resource-thumbnail doc">
+                            <i class="far fa-file-word"></i>
+                        </div>
+                        <div class="resource-info">
+                            <div class="resource-name">Lab Report Template</div>
+                            <div class="resource-meta">
+                                <span class="resource-author">By Sarah P.</span>
+                                <span class="resource-date">Mar 5</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sample Resource 4 -->
+                    <div class="resource-card">
+                        <div class="resource-thumbnail pdf">
+                            <i class="far fa-file-pdf"></i>
+                        </div>
+                        <div class="resource-info">
+                            <div class="resource-name">Practice Exam Questions</div>
+                            <div class="resource-meta">
+                                <span class="resource-author">By Ryan T.</span>
+                                <span class="resource-date">Feb 28</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sample Resource 5 -->
+                    <div class="resource-card">
+                        <div class="resource-thumbnail doc">
+                            <i class="far fa-file-word"></i>
+                        </div>
+                        <div class="resource-info">
+                            <div class="resource-name">Study Guide - Midterm</div>
+                            <div class="resource-meta">
+                                <span class="resource-author">By Lisa M.</span>
+                                <span class="resource-date">Feb 20</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sample Resource 6 -->
+                    <div class="resource-card">
+                        <div class="resource-thumbnail pdf">
+                            <i class="far fa-file-pdf"></i>
+                        </div>
+                        <div class="resource-info">
+                            <div class="resource-name">Reaction Mechanisms Cheat Sheet</div>
+                            <div class="resource-meta">
+                                <span class="resource-author">By Mercy D.</span>
+                                <span class="resource-date">Feb 15</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Members Section -->
+            <div class="community-content-section" id="members-section">
+                <div class="members-list">
+                    <!-- Sample Member 1 -->
+                    <div class="member-card">
+                        <div class="member-avatar">JD</div>
+                        <div class="member-info">
+                            <div class="member-name">John Doe</div>
+                            <div class="member-role">Admin</div>
+                            <div class="member-join-date">Joined Jan 2023</div>
+                        </div>
+                    </div>
+
+                    <!-- Sample Member 2 -->
+                    <div class="member-card">
+                        <div class="member-avatar">AK</div>
+                        <div class="member-info">
+                            <div class="member-name">Alex Kim</div>
+                            <div class="member-role">Moderator</div>
+                            <div class="member-join-date">Joined Jan 2023</div>
+                        </div>
+                    </div>
+
+                    <!-- Sample Member 3 -->
+                    <div class="member-card">
+                        <div class="member-avatar">SP</div>
+                        <div class="member-info">
+                            <div class="member-name">Sarah Peterson</div>
+                            <div class="member-role">Member</div>
+                            <div class="member-join-date">Joined Feb 2023</div>
+                        </div>
+                    </div>
+
+                    <!-- Sample Member 4 -->
+                    <div class="member-card">
+                        <div class="member-avatar">RT</div>
+                        <div class="member-info">
+                            <div class="member-name">Ryan Thomas</div>
+                            <div class="member-role">Member</div>
+                            <div class="member-join-date">Joined Feb 2023</div>
+                        </div>
+                    </div>
+
+                    <!-- Sample Member 5 -->
+                    <div class="member-card">
+                        <div class="member-avatar">LM</div>
+                        <div class="member-info">
+                            <div class="member-name">Lisa Murray</div>
+                            <div class="member-role">Member</div>
+                            <div class="member-join-date">Joined Mar 2023</div>
+                        </div>
+                    </div>
+
+                    <!-- Sample Member 6 -->
+                    <div class="member-card">
+                        <div class="member-avatar">MD</div>
+                        <div class="member-info">
+                            <div class="member-name">Mercy Davis</div>
+                            <div class="member-role">Member</div>
+                            <div class="member-join-date">Joined Mar 2023</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Events Section -->
+            <div class="community-content-section" id="events-section">
+                <div class="events-calendar">
+                    <h3>Upcoming Events</h3>
+                    <div class="event-list">
+                        <!-- Sample Event 1 -->
+                        <div class="event-item">
+                            <div class="event-date">
+                                <div class="event-day">23</div>
+                                <div class="event-month">Mar</div>
+                            </div>
+                            <div class="event-info">
+                                <div class="event-title">Study Group Session - Exam Prep</div>
+                                <div class="event-details">Location: Main Library, Room 202</div>
+                                <div class="event-time">
+                                    <i class="far fa-clock"></i> 6:00 PM - 8:00 PM
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sample Event 2 -->
+                        <div class="event-item">
+                            <div class="event-date">
+                                <div class="event-day">28</div>
+                                <div class="event-month">Mar</div>
+                            </div>
+                            <div class="event-info">
+                                <div class="event-title">Guest Lecture: Advanced Molecular Structures</div>
+                                <div class="event-details">Location: Science Building, Auditorium A</div>
+                                <div class="event-time">
+                                    <i class="far fa-clock"></i> 2:00 PM - 4:00 PM
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sample Event 3 -->
+                        <div class="event-item">
+                            <div class="event-date">
+                                <div class="event-day">5</div>
+                                <div class="event-month">Apr</div>
+                            </div>
+                            <div class="event-info">
+                                <div class="event-title">Lab Report Workshop</div>
+                                <div class="event-details">Location: Chemistry Lab, Room 110</div>
+                                <div class="event-time">
+                                    <i class="far fa-clock"></i> 3:30 PM - 5:00 PM
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="add-event-btn">Add New Event</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Toggle -->
+    <div class="footer-toggle">
+        <div class="toggle-switch"></div>
+    </div>
+
+
+    <script>
+        // JavaScript for tab navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab navigation
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs and sections
+                    tabs.forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.community-content-section').forEach(s => s.classList.remove('active'));
+
+                    // Add active class to clicked tab and corresponding section
+                    this.classList.add('active');
+                    const tabName = this.getAttribute('data-tab');
+                    document.getElementById(tabName + '-section').classList.add('active');
+                });
+            });
+
+            // Toggle join/leave button
+            const joinButton = document.getElementById('join-toggle');
+            joinButton.addEventListener('click', function() {
+                if (this.classList.contains('join-button')) {
+                    this.classList.remove('join-button');
+                    this.classList.add('leave-button');
+                    this.textContent = 'Leave Community';
+
+                    // Update member count (demo only)
+                    const memberCount = document.getElementById('member-count');
+                    memberCount.textContent = parseInt(memberCount.textContent) + 1;
+                } else {
+                    this.classList.remove('leave-button');
+                    this.classList.add('join-button');
+                    this.textContent = 'Join Community';
+
+                    // Update member count (demo only)
+                    const memberCount = document.getElementById('member-count');
+                    memberCount.textContent = parseInt(memberCount.textContent) - 1;
+                }
+            });
+
+            // Dark mode toggle
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            darkModeToggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+                document.body.classList.toggle('dark-mode');
+            });
+
+            // Mobile sidebar toggle
+            const sidebarOpenBtn = document.querySelector('.sidebar-open');
+            const sidebarCloseBtn = document.querySelector('.sidebar-close');
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+
+            sidebarOpenBtn.addEventListener('click', function() {
+                sidebar.style.left = '0';
+                sidebar.style.display = 'block';
+                sidebarOpenBtn.style.display = 'none';
+            });
+
+            sidebarCloseBtn.addEventListener('click', function() {
+                sidebar.style.left = '-250px';
+                setTimeout(function() {
+                    sidebar.style.display = 'none';
+                    sidebarOpenBtn.style.display = 'flex';
+                }, 300);
+            });
+
+            // Responsive adjustment
+            function adjustForMobile() {
+                if (window.innerWidth <= 768) {
+                    sidebar.style.display = 'none';
+                    sidebarOpenBtn.style.display = 'flex';
+                    mainContent.style.marginLeft = '0';
+                } else {
+                    sidebar.style.display = 'block';
+                    sidebar.style.left = '0';
+                    sidebarOpenBtn.style.display = 'none';
+                }
+            }
+
+            // Call on load and on resize
+            window.addEventListener('resize', adjustForMobile);
+            adjustForMobile();
+
+            // Set default community name and description (for demo)
+            document.getElementById('community-name').textContent = "Organic Chemistry Study Group";
+            document.getElementById('community-description').textContent = "A community for Organic Chemistry students to share resources, organize study sessions, and help each other prepare for exams.";
+
+            // Add content layout adjustment
+            function adjustContentLayout() {
+                const contentSections = document.querySelectorAll('.community-content-section');
+                if (window.innerWidth <= 992) {
+                    contentSections.forEach(section => {
+                        section.classList.add('mobile-layout');
+                    });
+                } else {
+                    contentSections.forEach(section => {
+                        section.classList.remove('mobile-layout');
+                    });
+                }
+            }
+
+            window.addEventListener('resize', adjustContentLayout);
+            adjustContentLayout();
+        });
+        // Toggle switch functionality
+        const toggleSwitch = document.querySelector('.toggle-switch');
+        toggleSwitch.addEventListener('click', function() {
+            this.classList.toggle('active');
+        });
+
+        // Sidebar close functionality with reopen capability
+        const sidebarClose = document.querySelector('.sidebar-close');
+        const sidebarOpen = document.querySelector('.sidebar-open');
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+        const footerToggle = document.querySelector('.footer-toggle');
+
+        // Function to close sidebar
+        function closeSidebar() {
+            sidebar.style.width = '0';
+            sidebar.style.padding = '0';
+            sidebar.style.overflow = 'hidden';
+            mainContent.style.marginLeft = '0';
+            sidebarOpen.style.display = 'flex';
+            // Adjust footer toggle position
+            footerToggle.style.left = '20px';
+        }
+
+        // Function to open sidebar
+        function openSidebar() {
+            sidebar.style.width = '125px';
+            sidebar.style.padding = '20px 0 0 0';
+            sidebar.style.overflow = 'visible';
+            sidebarOpen.style.display = 'none';
+            // Adjust footer toggle position
+            footerToggle.style.left = '20px';
+        }
+
+        // Close sidebar when X is clicked
+        sidebarClose.addEventListener('click', closeSidebar);
+
+        // Open sidebar when menu button is clicked
+        sidebarOpen.addEventListener('click', openSidebar);
+
+        // Update active class based on current page
+        const menuItems = document.querySelectorAll('.menu-item');
+        const currentPage = window.location.pathname.split('/').pop();
+
+        menuItems.forEach(item => {
+            const itemPage = item.getAttribute('href');
+            if (itemPage === currentPage) {
+                item.classList.add('active');
+            } else if (currentPage === '' && itemPage === 'dashboard.html') {
+                // Set dashboard as active on main page
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+
+        // Make logout button functional
+        const logoutBtn = document.querySelector('.logout-btn');
+        logoutBtn.addEventListener('click', function() {
+            alert('Logout functionality would go here');
+        });
+        // Add this script to your communityview.html page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Retrieve community data from localStorage
+            const communityData = JSON.parse(localStorage.getItem('newCommunity'));
+
+            // Check if data exists
+            if (communityData) {
+                // Update page elements with community data
+                const communityNameElement = document.getElementById('community-name');
+                const communityDescriptionElement = document.getElementById('community-description');
+
+                // If these elements exist, update them
+                if (communityNameElement) {
+                    communityNameElement.textContent = communityData.name;
+                    // Also update page title
+                    document.title = communityData.name + " - StudyHub";
+                }
+
+                if (communityDescriptionElement) {
+                    communityDescriptionElement.textContent = communityData.description;
+                }
+
+                // You can also display the creation date if needed
+                const createdDateElement = document.getElementById('created-date');
+                if (createdDateElement && communityData.created) {
+                    const createdDate = new Date(communityData.created);
+                    createdDateElement.textContent = createdDate.toLocaleDateString();
+                }
+            } else {
+                // Handle case where no community data exists
+                console.log("No community data found in localStorage");
+                // You could redirect back to the communities page or show an error message
+            }
+        });
+    </script>
+</body>
+
+</html>
