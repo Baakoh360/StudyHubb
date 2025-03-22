@@ -23,7 +23,6 @@
             align-items: center;
             position: relative;
         }
-        /* Dark overlay */
         
         body::before {
             content: '';
@@ -42,6 +41,8 @@
             padding: 30px;
             z-index: 2;
             text-align: center;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
         }
         
         .logo {
@@ -97,6 +98,11 @@
             background-color: #F0C800;
         }
         
+        .login-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
         .divider {
             color: white;
             margin-bottom: 20px;
@@ -142,7 +148,23 @@
         .signup-link:hover {
             text-decoration: underline;
         }
-        /* Responsive adjustments */
+        
+        .error-message {
+            color: #ff6b6b;
+            margin-bottom: 15px;
+            font-size: 14px;
+            text-align: left;
+            display: none;
+            padding: 10px;
+            background-color: rgba(255, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        
+        .loading {
+            display: none;
+            color: white;
+            margin-bottom: 15px;
+        }
         
         @media (max-width: 480px) {
             .login-container {
@@ -168,7 +190,10 @@
             </a>
         </div>
 
-        <form id="login-form" action="dashboard.html" method="GET">
+        <form id="login-form">
+            <div class="error-message" id="error-message"></div>
+            <div class="loading" id="loading">Logging in...</div>
+
             <div class="input-group">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>
@@ -179,19 +204,19 @@
                 <input type="password" id="password" name="password" required>
             </div>
 
-            <button type="submit" class="login-btn">Login</button>
+            <button type="submit" class="login-btn" id="login-btn">Login</button>
         </form>
 
         <div class="divider">Or log in with</div>
 
         <div class="social-login">
-            <button class="social-btn google-btn" onclick="socialLogin('google')">
+            <button class="social-btn google-btn" id="google-btn">
                 <i class="fab fa-google"></i>
             </button>
-            <button class="social-btn facebook-btn" onclick="socialLogin('facebook')">
+            <button class="social-btn facebook-btn" id="facebook-btn">
                 <i class="fab fa-facebook-f"></i>
             </button>
-            <button class="social-btn email-btn" onclick="socialLogin('email')">
+            <button class="social-btn email-btn" id="email-btn">
                 <i class="fas fa-envelope"></i>
             </button>
         </div>
@@ -202,39 +227,118 @@
     </div>
 
     <script>
-        // Form submission with validation
-        document.getElementById('login-form').addEventListener('submit', function(e) {
+        // Multiple API URLs to try if the main one fails
+        const API_URLS = [
+            'https://study-hubb.vercel.app/api',
+            'https://study-hubb.vercel.app/api/login', // Sometimes auth endpoints are in a sub-path
+            'https://api.study-hubb.vercel.app/api' // Sometimes there's a specific API subdomain
+        ];
+
+        // Helper functions
+        function showError(message) {
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('login-btn').disabled = false;
+
+            // Enable social buttons
+            document.getElementById('google-btn').disabled = false;
+            document.getElementById('facebook-btn').disabled = false;
+            document.getElementById('email-btn').disabled = false;
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('login-btn').disabled = true;
+
+            // Disable social buttons during loading
+            document.getElementById('google-btn').disabled = true;
+            document.getElementById('facebook-btn').disabled = true;
+            document.getElementById('email-btn').disabled = true;
+        }
+
+        // Regular login
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
             e.preventDefault();
+            showLoading();
 
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
             // Basic validation
             if (!email || !password) {
-                alert('Please fill in all fields');
+                showError('Please fill in all fields');
                 return;
             }
 
-            // For demonstration purposes, we'll just redirect to the dashboard
-            // In a real application, you would validate credentials on the server
-            localStorage.setItem('studyHebb_user', email);
-            window.location.href = 'dashboard.html';
+            const loginData = {
+                email: email,
+                password: password
+            };
+
+            console.log('Attempting login with:', email);
+
+            // Try each API URL until one works
+            let loginSuccessful = false;
+
+            for (const apiUrl of API_URLS) {
+                if (loginSuccessful) break;
+
+                try {
+                    console.log(`Trying login with API URL: ${apiUrl}/login`);
+
+                    const response = await fetch(`${apiUrl}/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(loginData)
+                    });
+
+                    console.log(`Response from ${apiUrl}/login:`, response.status);
+
+                    // Check if login was successful
+                    if (response.status === 200 || response.status === 201) {
+                        const data = await response.json();
+                        console.log('Login successful:', data);
+
+                        // Store auth data - FIXED: using the correct property names from API response
+                        localStorage.setItem('studyHubb_access_token', data.access_token);
+                        localStorage.setItem('studyHubb_token_type', data.token_type);
+                        localStorage.setItem('studyHubb_user', JSON.stringify(data.user));
+
+                        // Success!
+                        loginSuccessful = true;
+                        window.location.href = 'dashboard.html';
+                        break;
+                    } else if (response.status === 401) {
+                        // Authentication failure - no need to try other URLs
+                        const errorData = await response.json().catch(() => ({
+                            message: 'Invalid email or password'
+                        }));
+                        throw new Error(errorData.message || 'Invalid email or password');
+                    } else {
+                        // Other errors
+                        const errorData = await response.json().catch(() => ({
+                            message: 'Login failed'
+                        }));
+                        throw new Error(errorData.message || `Login failed with status ${response.status}`);
+                    }
+                } catch (error) {
+                    console.error(`Error with API URL ${apiUrl}:`, error);
+                    // Only show error if this is the last URL to try or if credentials are invalid
+                    if (apiUrl === API_URLS[API_URLS.length - 1] || error.message.includes('Invalid email')) {
+                        if (error.message.includes('Failed to fetch')) {
+                            showError('Unable to connect to the server. Please check your internet connection or try again later.');
+                        } else {
+                            showError(error.message || 'An error occurred during login. Please try again.');
+                        }
+                    }
+                }
+            }
         });
-
-        // Social login function
-        function socialLogin(provider) {
-            // This would normally connect to OAuth providers
-            console.log(`Attempting to login with ${provider}`);
-
-            // For demo purposes, simulate a successful login and redirect
-            localStorage.setItem('studyHebb_user', `${provider}_user@example.com`);
-            localStorage.setItem('studyHebb_login_method', provider);
-
-            // Redirect to dashboard after short delay
-            setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1000);
-        }
     </script>
 </body>
 
