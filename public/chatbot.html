@@ -727,171 +727,201 @@
             }
 
             // Function to get the current time
-            function getCurrentTime() {
-                const now = new Date();
-                return now.toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit"
-                });
-            }
+function getCurrentTime() {
+    const now = new Date();
+    return now.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+}
 
-            // Function to create user messages
-            function createUserMessageElement(message) {
-                const messageDiv = document.createElement("div");
-                messageDiv.className = "message";
-                messageDiv.innerHTML = `
-            <div class="message-avatar user-avatar">
-                <i class="fas fa-user"></i>
+// Function to create user messages
+function createUserMessageElement(message) {
+    const messageDiv = document.createElement("div");
+    messageDiv.className = "message";
+    messageDiv.innerHTML = `
+        <div class="message-avatar user-avatar">
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="message-user">
+            <div class="message-content">${message}</div>
+            <div class="message-timestamp">${getCurrentTime()}</div>
+        </div>`;
+    return messageDiv;
+}
+
+// Function to create AI messages
+function createAIMessageElement(content, isTyping = false) {
+    const messageDiv = document.createElement("div");
+    messageDiv.className = "message message-ai-container";
+
+    if (isTyping) {
+        messageDiv.innerHTML = `
+            <div class="message-avatar brilla-avatar">
+                <i class="fas fa-robot"></i>
             </div>
-            <div class="message-user">
-                <div class="message-content">${message}</div>
+            <div class="message-ai">
+                <div class="typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>`;
+    } else {
+        content = formatContent(content);
+        messageDiv.innerHTML = `
+            <div class="message-avatar brilla-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="message-ai">
+                <div class="message-content markdown">${content}</div>
                 <div class="message-timestamp">${getCurrentTime()}</div>
             </div>`;
-                return messageDiv;
-            }
+    }
+    return messageDiv;
+}
 
-            // Function to create AI messages
-            function createAIMessageElement(content, isTyping = false) {
-                const messageDiv = document.createElement("div");
-                messageDiv.className = "message message-ai-container";
+// Function to format content (handles code blocks)
+function formatContent(content) {
+    content = content.replace(/(\w+)?\n([\s\S]*?)\n/g, (match, language, code) =>
+        <pre><button class="copy-btn">Copy</button><code>${code}</code></pre>
+    );
+    return content.replace(/\n/g, "<br>");
+}
 
-                if (isTyping) {
-                    messageDiv.innerHTML = `
-                <div class="message-avatar brilla-avatar">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <div class="message-ai">
-                    <div class="typing-indicator">
-                        <div class="typing-dot"></div>
-                        <div class="typing-dot"></div>
-                        <div class="typing-dot"></div>
-                    </div>
-                </div>`;
-                } else {
-                    content = formatContent(content);
-                    messageDiv.innerHTML = `
-                <div class="message-avatar brilla-avatar">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <div class="message-ai">
-                    <div class="message-content markdown">${content}</div>
-                    <div class="message-timestamp">${getCurrentTime()}</div>
-                </div>`;
-                }
-                return messageDiv;
-            }
+// Function to query your backend API with authentication
+async function queryBackendAPI(session_id, message) {
+    const accessToken = localStorage.getItem("studyHubb_access_token");
+    if (!accessToken) {
+        throw new Error("User is not authenticated. Please log in.");
+    }
 
-            // Function to format content (handles code blocks)
-            function formatContent(content) {
-                content = content.replace(/```(\w+)?\n([\s\S]*?)\n```/g, (match, language, code) =>
-                    `<pre><button class="copy-btn">Copy</button><code>${code}</code></pre>`
-                );
-                return content.replace(/\n/g, "<br>");
-            }
-
-            // Function to query OpenAI API
-            async function queryOpenAI(messages) {
-                try {
-                    const response = await fetch("https://your-backend-api.com/openai", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            model: "gpt-3.5-turbo",
-                            messages: messages,
-                            max_tokens: 1000,
-                        }),
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`API request failed with status ${response.status}`);
-                    }
-
-                    const data = await response.json();
-                    return data.choices[0].message.content;
-                } catch (error) {
-                    console.error("Error calling OpenAI API:", error);
-                    return "I encountered an error. Please try again later.";
-                }
-            }
-
-            // Function to handle message sending
-            async function handleSendMessage() {
-                const chatInput = document.getElementById("chat-input");
-                const chatMessages = document.getElementById("chat-messages");
-                if (!chatInput || !chatMessages) return;
-
-                const message = chatInput.value.trim();
-                if (!message) return;
-
-                // Display user message
-                const userMessageElement = createUserMessageElement(message);
-                chatMessages.appendChild(userMessageElement);
-                chatInput.value = "";
-                chatInput.style.height = "auto";
-
-                // Show AI typing indicator
-                const typingIndicator = createAIMessageElement("", true);
-                chatMessages.appendChild(typingIndicator);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-
-                // Query OpenAI API
-                try {
-                    const response = await queryOpenAI([{
-                        role: "user",
-                        content: message
-                    }]);
-
-                    chatMessages.removeChild(typingIndicator);
-                    const aiMessageElement = createAIMessageElement(response);
-                    chatMessages.appendChild(aiMessageElement);
-                    activateCopyButtons();
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                } catch (error) {
-                    chatMessages.removeChild(typingIndicator);
-                    const errorMessageElement = createAIMessageElement("An error occurred. Please try again.");
-                    chatMessages.appendChild(errorMessageElement);
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                }
-            }
-
-            // Function to activate copy buttons for code blocks
-            function activateCopyButtons() {
-                document.querySelectorAll(".copy-btn").forEach(button => {
-                    button.addEventListener("click", function() {
-                        const codeBlock = this.nextElementSibling;
-                        navigator.clipboard.writeText(codeBlock.textContent)
-                            .then(() => {
-                                this.textContent = "Copied!";
-                                setTimeout(() => {
-                                    this.textContent = "Copy";
-                                }, 2000);
-                            })
-                            .catch(err => console.error("Failed to copy: ", err));
-                    });
-                });
-            }
-
-            // Function to initialize chat
-            function initializeChat() {
-                const chatInput = document.getElementById("chat-input");
-                const sendButton = document.getElementById("send-btn");
-
-                if (!chatInput || !sendButton) return;
-
-                sendButton.addEventListener("click", handleSendMessage);
-                chatInput.addEventListener("keydown", function(e) {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault();
-                        handleSendMessage();
-                    }
-                });
-            }
-
-            // Initialize chat
-            initializeChat();
+    try {
+        const response = await fetch("https://study-hubb.vercel.app/api/brilla/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": Bearer ${accessToken} // Include the access token in the request
+            },
+            body: JSON.stringify({
+                session_id: session_id,
+                message: message
+            }),
         });
+
+        if (!response.ok) {
+            throw new Error(API request failed with status ${response.status});
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error calling backend API:", error);
+        return { response: "I encountered an error. Please try again later.", session_id: session_id };
+    }
+}
+
+// Function to handle message sending
+async function handleSendMessage() {
+    const chatInput = document.getElementById("chat-input");
+    const chatMessages = document.getElementById("chat-messages");
+    if (!chatInput || !chatMessages) return;
+
+    const message = chatInput.value.trim();
+    if (!message) return;
+
+    // Display user message
+    const userMessageElement = createUserMessageElement(message);
+    chatMessages.appendChild(userMessageElement);
+    chatInput.value = "";
+    chatInput.style.height = "auto";
+
+    // Show AI typing indicator
+    const typingIndicator = createAIMessageElement("", true);
+    chatMessages.appendChild(typingIndicator);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Get or create session_id
+    let session_id = localStorage.getItem("session_id");
+    if (!session_id) {
+        session_id = Date.now().toString(); // Simple session ID generation
+        localStorage.setItem("session_id", session_id);
+    }
+
+    // Query your backend API
+    try {
+        const { response, session_id: newSessionId } = await queryBackendAPI(session_id, message);
+
+        // Update session_id if a new one is returned
+        if (newSessionId) {
+            localStorage.setItem("session_id", newSessionId);
+        }
+
+        chatMessages.removeChild(typingIndicator);
+        const aiMessageElement = createAIMessageElement(response);
+        chatMessages.appendChild(aiMessageElement);
+        activateCopyButtons();
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    } catch (error) {
+        chatMessages.removeChild(typingIndicator);
+        const errorMessageElement = createAIMessageElement(error.message || "An error occurred. Please try again.");
+        chatMessages.appendChild(errorMessageElement);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+}
+
+// Function to activate copy buttons for code blocks
+function activateCopyButtons() {
+    document.querySelectorAll(".copy-btn").forEach(button => {
+        button.addEventListener("click", function() {
+            const codeBlock = this.nextElementSibling;
+            navigator.clipboard.writeText(codeBlock.textContent)
+                .then(() => {
+                    this.textContent = "Copied!";
+                    setTimeout(() => {
+                        this.textContent = "Copy";
+                    }, 2000);
+                })
+                .catch(err => console.error("Failed to copy: ", err));
+        });
+    });
+}
+
+// Function to initialize chat
+function initializeChat() {
+    const chatInput = document.getElementById("chat-input");
+    const sendButton = document.getElementById("send-btn");
+
+    if (!chatInput || !sendButton) return;
+
+    sendButton.addEventListener("click", handleSendMessage);
+    chatInput.addEventListener("keydown", function(e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage();
+        }
+    });
+}
+
+// Initialize chat
+initializeChat();
+    // Handle new chat button
+    const newChatBtn = document.getElementById("new-chat-btn");
+            if (newChatBtn) {
+                newChatBtn.addEventListener("click", function() {
+                    // Clear chat messages
+                    chatMessages.innerHTML = "";
+
+                    // Reset conversation history
+                    conversationHistory = [];
+
+                    // Add a welcome message
+                    const welcomeMessage = createAIMessageElement("Hi! I'm Brilla AI Assistant. How can I help with your studies today?");
+                    chatMessages.appendChild(welcomeMessage);
+                });
+            }
+        });
+        
     </script>
 </body>
 
